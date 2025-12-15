@@ -1,127 +1,125 @@
-================================================================================
-🚀 FBA AUTOMATION - COMECE AQUI
-================================================================================
-
-PARA RODAR O PROGRAMA, EXECUTE APENAS ESTES 2 COMANDOS:
-
-1. Abra o terminal nesta pasta e execute:
-
-   ./iniciar.sh
-
-2. Pronto! O servidor estará rodando em http://localhost:8001
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║         🚀 FBA AUTOMATION - GUIA RÁPIDO DE INSTALAÇÃO           ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
 
 
-================================================================================
-📖 COMO USAR
-================================================================================
+┌──────────────────────────────────────────────────────────────────┐
+│  PARA WINDOWS                                                    │
+└──────────────────────────────────────────────────────────────────┘
 
-Acesse a documentação interativa da API:
+📌 PASSO 1: INSTALAR TUDO
 
-   http://localhost:8001/docs
+   1. Clique com BOTÃO DIREITO no arquivo:
 
-Lá você verá TODOS os endpoints disponíveis com exemplos!
+      ➜ INSTALAR_WINDOWS.bat
 
+   2. Selecione: "Executar como administrador"
 
-================================================================================
-🎯 EXEMPLOS RÁPIDOS
-================================================================================
+   3. Aguarde a instalação (10-15 minutos)
 
-CAPTURAR PRODUTOS DE ABAS ABERTAS DO CHROME:
---------------------------------------------
-
-1. Abra o Chrome com debugging:
-
-   google-chrome --remote-debugging-port=9222 &
-
-2. Abra as páginas de produtos que você quer capturar
-
-3. Use a API (veja em http://localhost:8001/docs):
-   - Endpoint: POST /api/capture/capture-tabs
-   - Parâmetros: devtools_url: http://127.0.0.1:9222
+   ✅ Pronto! Tudo instalado automaticamente.
 
 
-FAZER SCRAPING DE UM SITE:
---------------------------
+📌 PASSO 2: INICIAR O SISTEMA
 
-1. Use a API (veja em http://localhost:8001/docs):
-   - Endpoint: POST /api/supplier/scrape
-   - Parâmetro: supplier_url: https://exemplo.com/produtos
+   1. Dê DUPLO CLIQUE no arquivo:
 
-2. Para download direto em CSV:
-   - Endpoint: POST /api/supplier/scrape-and-download
+      ➜ INICIAR_TUDO.bat
 
+   2. Aguarde 3 janelas abrirem:
+      - Chrome Debug (fundo roxo)
+      - Backend (Python)
+      - Frontend (React)
 
-================================================================================
-⭐ NOVIDADE: 15 MÉTODOS DE EXTRAÇÃO DE UPC!
-================================================================================
-
-O sistema agora tenta 15 métodos diferentes para encontrar o UPC:
-- JSON-LD
-- Meta Tags
-- CSS Selectors
-- Data Attributes
-- Window Objects (Shopify, Next.js, etc)
-- JavaScript Scripts
-- Product Details
-- Labeled Text
-- HTML Tables
-- Definition Lists
-- API Patterns
-- Form Inputs
-- Image Alt Text
-- HTML Comments
-- Context Heuristic
-
-Ver detalhes completos em: METODOS_EXTRACAO_UPC.md
+   3. Seu navegador abrirá automaticamente
 
 
-================================================================================
-📚 DOCUMENTAÇÃO
-================================================================================
+📌 PASSO 3: USAR O SISTEMA
 
-README.md                - Visão geral do projeto
-COMO_RODAR.md           - Guia completo passo a passo
-METODOS_EXTRACAO_UPC.md - Detalhes dos 15 métodos de extração
-INSTALACAO_RAPIDA.md    - Instalação e uso rápido
+   1. Abra produtos NO CHROME ROXO (Chrome Debug)
 
+   2. No navegador normal, vá em:
+      http://localhost:5173/capture
 
-================================================================================
-🧪 TESTAR O SISTEMA
-================================================================================
+   3. Clique em "Capturar Abas"
 
-Para ver os 15 métodos em ação:
-
-   cd backend
-   python3 test_upc_extraction.py
+   4. Exporte o CSV com os produtos
 
 
-================================================================================
-❓ PROBLEMAS?
-================================================================================
-
-1. Se der erro ao rodar ./iniciar.sh, dê permissão:
-
-   chmod +x iniciar.sh
-
-2. Se faltar dependências:
-
-   pip3 install -r requirements.txt
-
-3. Se o Playwright não funcionar:
-
-   python3 -m playwright install chromium
-
-4. Leia COMO_RODAR.md para mais detalhes
+╔══════════════════════════════════════════════════════════════════╗
+║  ATENÇÃO: Use APENAS o Chrome com fundo ROXO para produtos!     ║
+║  Se usar outro Chrome, a captura NÃO vai funcionar!              ║
+╚══════════════════════════════════════════════════════════════════╝
 
 
-================================================================================
-✅ PRONTO PARA USAR!
-================================================================================
+┌──────────────────────────────────────────────────────────────────┐
+│  PARA LINUX                                                      │
+└──────────────────────────────────────────────────────────────────┘
 
-Execute: ./iniciar.sh
+📌 INSTALAÇÃO E INICIALIZAÇÃO
 
-E acesse: http://localhost:8001/docs
+   Abra o terminal na pasta do projeto e execute:
 
-Boa sorte! 🚀
+   chmod +x iniciar_tudo.sh
+   ./iniciar_tudo.sh
 
-================================================================================
+   Acesse: http://localhost:5173
+
+
+┌──────────────────────────────────────────────────────────────────┐
+│  ARQUIVOS IMPORTANTES                                            │
+└──────────────────────────────────────────────────────────────────┘
+
+📄 WINDOWS:
+   INSTALAR_WINDOWS.bat ........... Instalar tudo automaticamente
+   INICIAR_TUDO.bat ............... Iniciar o sistema completo
+   INICIAR_CHROME_DEBUG.bat ....... Iniciar só o Chrome Debug
+   instalar_windows.ps1 ........... Instalador PowerShell (alternativo)
+
+📄 LINUX:
+   iniciar_tudo.sh ................ Instalar e iniciar tudo
+   iniciar_chrome_debug.sh ........ Iniciar só o Chrome Debug
+
+📄 DOCUMENTAÇÃO:
+   README.md ...................... Documentação completa
+   INSTALACAO_WINDOWS.md .......... Guia detalhado Windows
+
+
+┌──────────────────────────────────────────────────────────────────┐
+│  PROBLEMAS COMUNS                                                │
+└──────────────────────────────────────────────────────────────────┘
+
+❌ "Não capturou nenhum produto"
+   ➜ Você está usando o Chrome errado!
+   ➜ Use APENAS o Chrome com FUNDO ROXO
+
+❌ "Acesso negado" ao executar .bat
+   ➜ Clique com botão direito
+   ➜ Selecione "Executar como administrador"
+
+❌ "Porta 8001 já em uso"
+   ➜ Feche os terminais/janelas do backend
+   ➜ Execute INICIAR_TUDO.bat novamente
+
+❌ "Backend offline"
+   ➜ Aguarde mais alguns segundos
+   ➜ Verifique se a janela do Backend abriu
+
+
+┌──────────────────────────────────────────────────────────────────┐
+│  LINKS ÚTEIS                                                     │
+└──────────────────────────────────────────────────────────────────┘
+
+Frontend (Interface): .......... http://localhost:5173
+Backend API: ................... http://localhost:8001
+Documentação da API: ........... http://localhost:8001/docs
+Captura de Produtos: ........... http://localhost:5173/capture
+
+
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║  ✅ Agora é só usar! Boa sorte com seus produtos FBA!           ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
