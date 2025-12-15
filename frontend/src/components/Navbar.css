@@ -1,0 +1,121 @@
+.navbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+}
+
+.navbar-brand {
+  font-size: 18px;
+  font-weight: 900;
+  text-decoration: none;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.5px;
+}
+
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--gradient-1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+  font-size: 18px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 0;
+  margin: 0;
+}
+
+.nav-link {
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 12px 20px;
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.3s;
+  border-bottom: 3px solid transparent;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.nav-link:hover {
+  color: var(--primary-light);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.nav-link.active {
+  color: var(--primary-light);
+  background: rgba(99, 102, 241, 0.08);
+  border-bottom-color: var(--primary);
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.mobile-menu-btn svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--surface);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-links.active {
+    max-height: 400px;
+  }
+
+  .nav-link {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+}

@@ -1,0 +1,18 @@
+# Dependências do projeto FBA Automation
+
+# Framework Web
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# Web Scraping
+playwright==1.40.0
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
+# HTTP Requests
+httpx==0.25.2
+requests==2.31.0
+
+# Utilidades
+python-dotenv==1.0.0

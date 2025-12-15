@@ -1,0 +1,57 @@
+.products-page h1 {
+  margin-bottom: 40px;
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.filter-section h2 {
+  margin-bottom: 28px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.filter-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-grid label {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filter-grid input {
+  width: 100%;
+}
+
+.results-section {
+  margin-top: 40px;
+}
+
+.results-section h2 {
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .products-page h1 {
+    font-size: 28px;
+  }
+
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+}

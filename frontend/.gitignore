@@ -1,0 +1,160 @@
+# =========================
+# SISTEMAS OPERACIONAIS
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# LOGS
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================
+# EDITOR / IDE
+# =========================
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.code-workspace
+
+# =========================
+# AMBIENTES / SEGREDOS
+# =========================
+.env
+.env.*
+!.env.example
+
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# =========================
+# BACKEND (PYTHON)
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtualenvs (há um backend/venv no zip)
+.venv/
+venv/
+env/
+ENV/
+backend/venv/
+
+# build/distribuição
+build/
+dist/
+develop-eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+pip-wheel-metadata/
+
+# testes / análise
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+pytestdebug.log
+
+# tipagem / linters / servidores
+.mypy_cache/
+.pyre/
+.pytype/
+.pyrightcache/
+
+# notebooks
+.ipynb_checkpoints/
+
+# bancos/arquivos locais
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# =========================
+# FRONTEND (NODE / VITE / REACT)
+# =========================
+# dependências
+node_modules/
+frontend/node_modules/
+
+# saídas de build
+dist/
+dist-ssr/
+build/
+frontend/dist/
+
+# caches e ferramentas
+.vite/
+frontend/.vite/
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.turbo/
+.babelcache/
+.next/
+.nuxt/
+.svelte-kit/
+
+# yarn / pnp
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+.yarnrc.yml
+
+# storybook / relatórios
+storybook-static/
+**/storybook-cache/
+coverage/
+reports/
+
+# artefatos TS
+*.tsbuildinfo
+
+# =========================
+# OUTROS DIRETÓRIOS DO PROJETO
+# =========================
+# Pasta de configurações/artefatos do Claude (se existir)
+.claude/
+
+# =========================
+# TEMPORÁRIOS
+# =========================
+*.local
+*.tmp
+*.temp
+~$*
+*.swp
+*.lock-wscript
+
+# =========================
+# ARQUIVOS DE LOCK (opcional)
+# =========================
+# Se você NÃO quiser versionar locks alternativos, descomente:
+# yarn.lock
+# pnpm-lock.yaml
+# (package-lock.json normalmente é versionado)

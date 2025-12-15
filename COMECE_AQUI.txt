@@ -1,0 +1,127 @@
+================================================================================
+🚀 FBA AUTOMATION - COMECE AQUI
+================================================================================
+
+PARA RODAR O PROGRAMA, EXECUTE APENAS ESTES 2 COMANDOS:
+
+1. Abra o terminal nesta pasta e execute:
+
+   ./iniciar.sh
+
+2. Pronto! O servidor estará rodando em http://localhost:8001
+
+
+================================================================================
+📖 COMO USAR
+================================================================================
+
+Acesse a documentação interativa da API:
+
+   http://localhost:8001/docs
+
+Lá você verá TODOS os endpoints disponíveis com exemplos!
+
+
+================================================================================
+🎯 EXEMPLOS RÁPIDOS
+================================================================================
+
+CAPTURAR PRODUTOS DE ABAS ABERTAS DO CHROME:
+--------------------------------------------
+
+1. Abra o Chrome com debugging:
+
+   google-chrome --remote-debugging-port=9222 &
+
+2. Abra as páginas de produtos que você quer capturar
+
+3. Use a API (veja em http://localhost:8001/docs):
+   - Endpoint: POST /api/capture/capture-tabs
+   - Parâmetros: devtools_url: http://127.0.0.1:9222
+
+
+FAZER SCRAPING DE UM SITE:
+--------------------------
+
+1. Use a API (veja em http://localhost:8001/docs):
+   - Endpoint: POST /api/supplier/scrape
+   - Parâmetro: supplier_url: https://exemplo.com/produtos
+
+2. Para download direto em CSV:
+   - Endpoint: POST /api/supplier/scrape-and-download
+
+
+================================================================================
+⭐ NOVIDADE: 15 MÉTODOS DE EXTRAÇÃO DE UPC!
+================================================================================
+
+O sistema agora tenta 15 métodos diferentes para encontrar o UPC:
+- JSON-LD
+- Meta Tags
+- CSS Selectors
+- Data Attributes
+- Window Objects (Shopify, Next.js, etc)
+- JavaScript Scripts
+- Product Details
+- Labeled Text
+- HTML Tables
+- Definition Lists
+- API Patterns
+- Form Inputs
+- Image Alt Text
+- HTML Comments
+- Context Heuristic
+
+Ver detalhes completos em: METODOS_EXTRACAO_UPC.md
+
+
+================================================================================
+📚 DOCUMENTAÇÃO
+================================================================================
+
+README.md                - Visão geral do projeto
+COMO_RODAR.md           - Guia completo passo a passo
+METODOS_EXTRACAO_UPC.md - Detalhes dos 15 métodos de extração
+INSTALACAO_RAPIDA.md    - Instalação e uso rápido
+
+
+================================================================================
+🧪 TESTAR O SISTEMA
+================================================================================
+
+Para ver os 15 métodos em ação:
+
+   cd backend
+   python3 test_upc_extraction.py
+
+
+================================================================================
+❓ PROBLEMAS?
+================================================================================
+
+1. Se der erro ao rodar ./iniciar.sh, dê permissão:
+
+   chmod +x iniciar.sh
+
+2. Se faltar dependências:
+
+   pip3 install -r requirements.txt
+
+3. Se o Playwright não funcionar:
+
+   python3 -m playwright install chromium
+
+4. Leia COMO_RODAR.md para mais detalhes
+
+
+================================================================================
+✅ PRONTO PARA USAR!
+================================================================================
+
+Execute: ./iniciar.sh
+
+E acesse: http://localhost:8001/docs
+
+Boa sorte! 🚀
+
+================================================================================
