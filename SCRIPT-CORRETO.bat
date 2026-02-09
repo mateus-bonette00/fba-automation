@@ -43,22 +43,19 @@ REM VERIFICAR PERMISSOES DE ADMINISTRADOR
 REM ============================================
 net session >nul 2>&1
 if %errorLevel% NEQ 0 (
-    color 0C
     echo.
     echo ============================================================
-    echo    ERRO: PERMISSOES DE ADMINISTRADOR NECESSARIAS!
+    echo    SOLICITANDO PERMISSOES DE ADMINISTRADOR...
     echo ============================================================
     echo.
-    echo Este script precisa ser executado como Administrador.
+    echo Uma janela vai abrir solicitando permissoes.
+    echo Clique "Sim" para continuar.
     echo.
-    echo COMO FAZER:
-    echo   1. Clique com botao direito neste arquivo
-    echo   2. Selecione "Executar como administrador"
-    echo   3. Clique "Sim" na janela de permissoes
-    echo.
-    echo ============================================================
-    pause
-    exit /b 1
+    timeout /t 3 /nobreak >nul
+
+    REM Reiniciar como Admin
+    powershell -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    exit /b 0
 )
 
 echo.
