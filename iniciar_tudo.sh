@@ -45,9 +45,10 @@ cleanup() {
         echo -e "${GREEN}✅ Frontend encerrado${NC}"
     fi
 
-    # Matar Chrome debug
+    # Matar Opera debug
     lsof -ti:9222 | xargs kill -9 2>/dev/null
-    echo -e "${GREEN}✅ Chrome debug encerrado${NC}"
+    pkill -f "opera.*remote-debugging" 2>/dev/null
+    echo -e "${GREEN}✅ Opera debug encerrado${NC}"
 
     echo ""
     echo "👋 Até logo!"
@@ -58,23 +59,23 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 # ==========================================
-# 1. INICIAR CHROME DEBUG
+# 1. INICIAR OPERA DEBUG
 # ==========================================
-echo -e "${BLUE}1️⃣  INICIANDO CHROME DEBUG...${NC}"
+echo -e "${BLUE}1️⃣  INICIANDO OPERA DEBUG...${NC}"
 echo ""
 
-# Executar script de Chrome debug em background
-./iniciar_chrome_debug.sh &
-CHROME_SCRIPT_PID=$!
+# Executar script de Opera debug em background
+./iniciar_opera_debug.sh &
+OPERA_SCRIPT_PID=$!
 
-# Aguardar Chrome iniciar (4 segundos)
+# Aguardar Opera iniciar (4 segundos)
 sleep 5
 
-# Verificar se Chrome está rodando
+# Verificar se Opera está rodando
 if curl -s http://127.0.0.1:9222/json/version > /dev/null 2>&1; then
-    echo -e "${GREEN}✅ Chrome debug iniciado na porta 9222${NC}"
+    echo -e "${GREEN}✅ Opera debug iniciado na porta 9222${NC}"
 else
-    echo -e "${RED}❌ Erro ao iniciar Chrome debug${NC}"
+    echo -e "${RED}❌ Erro ao iniciar Opera debug${NC}"
     exit 1
 fi
 
@@ -165,13 +166,13 @@ echo ""
 echo "   🌐 Frontend:     http://localhost:5173"
 echo "   🔧 Backend API:  http://localhost:8001"
 echo "   📖 Docs API:     http://localhost:8001/docs"
-echo "   🌍 Chrome Debug: http://localhost:9222"
+echo "   🌍 Opera Debug:  http://localhost:9222"
 echo ""
 echo -e "${BLUE}📋 Próximos passos:${NC}"
 echo ""
 echo "   1. Acesse http://localhost:5173"
-echo "   2. Use o Chrome que foi aberto (porta 9222)"
-echo "   3. Abra as abas dos produtos no Chrome debug"
+echo "   2. Use o Opera que foi aberto (porta 9222)"
+echo "   3. Abra as abas dos produtos no Opera debug"
 echo "   4. Volte ao frontend para capturar"
 echo ""
 echo -e "${BLUE}📊 Logs:${NC}"

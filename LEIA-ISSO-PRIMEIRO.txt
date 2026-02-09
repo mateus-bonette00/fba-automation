@@ -1,0 +1,339 @@
+================================================================================
+    FBA AUTOMATION - INSTALACAO AUTOMATICA PARA WINDOWS
+================================================================================
+
+                    BEM-VINDO AO FBA AUTOMATION!
+
+Este projeto possui instalacao TOTALMENTE AUTOMATICA para Windows!
+
+
+================================================================================
+    INSTALACAO RAPIDA (1 CLIQUE)
+================================================================================
+
+1. Clique com botao direito em:
+
+   >>> CLIQUE-AQUI-PARA-INSTALAR.bat <<<
+
+2. Selecione: "Executar como administrador"
+
+3. Clique "Sim" quando o Windows pedir permissao
+
+4. Aguarde 10-15 minutos
+
+5. Pronto! O sistema estara instalado e funcionando!
+
+
+================================================================================
+    O QUE SERA INSTALADO AUTOMATICAMENTE
+================================================================================
+
+SOFTWARE BASE:
+  [x] Chocolatey - Gerenciador de pacotes
+  [x] Python 3.11 - Interpretador Python
+  [x] Node.js 20 LTS - Runtime JavaScript
+  [x] Google Chrome - Navegador
+  [x] Git - Controle de versao
+  [x] Visual C++ Build Tools - Compilador
+
+DEPENDENCIAS PYTHON (Backend):
+  [x] FastAPI 0.109.0
+  [x] Uvicorn 0.27.0
+  [x] Playwright 1.40.0
+  [x] Pandas 2.1.3
+  [x] Requests 2.31.0
+  [x] BeautifulSoup4 4.12.2
+  [x] python-multipart 0.0.6
+  [x] lxml 4.9.3
+
+DEPENDENCIAS NODE.JS (Frontend):
+  [x] React 18.2.0
+  [x] React DOM 18.2.0
+  [x] React Router 6.20.0
+  [x] Vite 5.0.0
+  [x] Plugin React para Vite
+
+CONFIGURACOES:
+  [x] Virtual Environment Python (backend/venv)
+  [x] Navegadores Playwright (Chromium)
+  [x] Pastas necessarias (logs, backend/data)
+
+
+================================================================================
+    COMO INICIAR O PROJETO (APOS INSTALACAO)
+================================================================================
+
+Metodo 1 - Script Automatico (Recomendado):
+
+  Duplo clique em: INICIAR_TUDO.bat
+
+  Isso vai abrir 3 janelas:
+    - Chrome Debug (porta 9222)
+    - Backend Python/FastAPI (porta 8001)
+    - Frontend React/Vite (porta 5173)
+
+
+Metodo 2 - Manual (3 comandos separados):
+
+  Terminal 1:
+    INICIAR_CHROME_DEBUG.bat
+
+  Terminal 2:
+    cd backend
+    venv\Scripts\activate
+    python main.py
+
+  Terminal 3:
+    cd frontend
+    npm run dev
+
+
+================================================================================
+    ACESSANDO O SISTEMA
+================================================================================
+
+Apos iniciar, acesse no navegador:
+
+  Frontend (Interface):    http://localhost:5173
+  Backend (API):           http://localhost:8001
+  Documentacao (Swagger):  http://localhost:8001/docs
+  Chrome Debug:            porta 9222
+
+
+================================================================================
+    COMO USAR O SISTEMA
+================================================================================
+
+1. Execute: INICIAR_TUDO.bat
+
+2. Use o Chrome Debug (janela roxa) para:
+   - Abrir novas abas (Ctrl + T)
+   - Acessar URLs de produtos da Amazon
+   - Deixar as abas carregarem
+
+3. Acesse no seu navegador normal:
+   http://localhost:5173/capture
+
+4. Clique em "Capturar Abas"
+
+5. Veja os produtos sendo extraidos automaticamente!
+
+
+================================================================================
+    ARQUIVOS IMPORTANTES
+================================================================================
+
+INSTALADORES:
+  CLIQUE-AQUI-PARA-INSTALAR.bat       - Instalador principal (USE ESTE!)
+  INSTALAR_E_INICIAR_COMPLETO.bat     - Instalador completo detalhado
+  Instalar-Completo.ps1                - Instalador PowerShell
+  INSTALAR_WINDOWS.bat                 - Instalador antigo
+
+INICIALIZADORES:
+  INICIAR_TUDO.bat                     - Inicia todos os servicos
+  INICIAR_CHROME_DEBUG.bat             - Inicia apenas Chrome Debug
+
+DOCUMENTACAO:
+  LEIA-ME_WINDOWS.md                   - Documentacao completa
+  GUIA-RAPIDO-WINDOWS.html             - Guia visual (abra no navegador)
+  LEIA-ISSO-PRIMEIRO.txt               - Este arquivo
+
+
+================================================================================
+    REQUISITOS DO SISTEMA
+================================================================================
+
+MINIMO:
+  - Windows 10 (64-bit)
+  - 2 GB de espaco livre
+  - 4 GB de RAM
+  - Conexao com internet
+  - Permissoes de administrador
+
+RECOMENDADO:
+  - Windows 11 (64-bit)
+  - 5 GB de espaco livre
+  - 8 GB de RAM
+  - Conexao rapida com internet
+
+
+================================================================================
+    SOLUCAO DE PROBLEMAS
+================================================================================
+
+ERRO: "Execute como Administrador"
+  Solucao:
+    1. Clique com botao direito no arquivo .bat
+    2. Selecione "Executar como administrador"
+    3. Clique "Sim" na janela de permissoes
+
+ERRO: "Porta 9222 em uso"
+  Solucao:
+    taskkill /F /IM chrome.exe
+    timeout /t 2
+    INICIAR_CHROME_DEBUG.bat
+
+ERRO: "Python nao encontrado"
+  Solucao:
+    1. Baixe: https://www.python.org/downloads/
+    2. Durante instalacao, marque "Add Python to PATH"
+    3. Execute o instalador novamente
+
+ERRO: "Node nao encontrado"
+  Solucao:
+    1. Baixe: https://nodejs.org/
+    2. Instale normalmente
+    3. Execute o instalador novamente
+
+ERRO: "npm install falhou"
+  Solucao:
+    cd frontend
+    rmdir /s /q node_modules
+    del package-lock.json
+    npm install
+
+
+================================================================================
+    DICAS IMPORTANTES
+================================================================================
+
+  [!] SEMPRE use o Chrome Debug para abrir produtos
+      (NAO use seu Chrome normal - nao funcionara!)
+
+  [!] O Chrome Debug e identificado pela tela roxa
+
+  [!] Mantenha as 3 janelas abertas enquanto usar o sistema
+      (Chrome Debug, Backend, Frontend)
+
+  [!] Para parar o sistema, feche as 3 janelas
+
+  [!] Faca backup da pasta backend/data (contem seus dados)
+
+  [!] Primeira execucao demora mais (downloads)
+
+  [!] Execucoes seguintes sao muito mais rapidas
+
+
+================================================================================
+    COMANDOS UTEIS
+================================================================================
+
+Verificar versoes instaladas:
+  python --version
+  node --version
+  npm --version
+  git --version
+  choco --version
+
+Atualizar dependencias Python:
+  cd backend
+  venv\Scripts\activate
+  pip install --upgrade -r ..\requirements.txt
+
+Atualizar dependencias Node.js:
+  cd frontend
+  npm update
+
+Parar todos os servicos:
+  taskkill /F /IM chrome.exe
+  taskkill /F /IM python.exe
+  taskkill /F /IM node.exe
+
+Reinstalar tudo do zero:
+  rmdir /s /q backend\venv
+  rmdir /s /q frontend\node_modules
+  CLIQUE-AQUI-PARA-INSTALAR.bat
+
+
+================================================================================
+    ESTRUTURA DO PROJETO
+================================================================================
+
+fba-automation/
+│
+├── backend/                    # Backend Python/FastAPI
+│   ├── api/                    # Endpoints da API
+│   ├── data/                   # Dados da aplicacao
+│   ├── venv/                   # Virtual environment
+│   ├── main.py                 # Entry point
+│   └── requirements.txt        # Dependencias Python
+│
+├── frontend/                   # Frontend React/Vite
+│   ├── src/                    # Codigo-fonte React
+│   ├── node_modules/           # Dependencias
+│   ├── package.json            # Dependencias Node.js
+│   └── vite.config.js          # Configuracao Vite
+│
+└── logs/                       # Logs do sistema
+
+
+================================================================================
+    WORKFLOW COMPLETO
+================================================================================
+
+1. INSTALACAO (primeira vez):
+   - Execute: CLIQUE-AQUI-PARA-INSTALAR.bat (como admin)
+   - Aguarde 10-15 minutos
+   - Pronto!
+
+2. INICIAR O SISTEMA:
+   - Execute: INICIAR_TUDO.bat
+   - Aguarde as 3 janelas abrirem
+
+3. USAR O SISTEMA:
+   - Abra produtos no Chrome Debug (janela roxa)
+   - Acesse: http://localhost:5173/capture
+   - Clique em "Capturar Abas"
+   - Veja os produtos sendo extraidos!
+
+4. PARAR O SISTEMA:
+   - Feche as 3 janelas (Chrome, Backend, Frontend)
+
+
+================================================================================
+    PROXIMOS PASSOS
+================================================================================
+
+1. Se ainda NAO instalou:
+   >>> Execute: CLIQUE-AQUI-PARA-INSTALAR.bat (como administrador)
+
+2. Se JA instalou:
+   >>> Execute: INICIAR_TUDO.bat
+
+3. Para mais detalhes:
+   >>> Abra: GUIA-RAPIDO-WINDOWS.html no navegador
+   >>> Leia: LEIA-ME_WINDOWS.md
+
+
+================================================================================
+    PRONTO PARA USAR!
+================================================================================
+
+Agora voce tem um instalador COMPLETAMENTE AUTOMATICO que configura TUDO
+com apenas 1 clique!
+
+Basta executar:
+  >>> CLIQUE-AQUI-PARA-INSTALAR.bat (como administrador) <<<
+
+E em 10-15 minutos, seu sistema estara 100% funcional!
+
+
+================================================================================
+    SUPORTE
+================================================================================
+
+Logs do sistema:
+  - Backend:  logs/backend.log
+  - Frontend: logs/frontend.log
+
+Verificar servicos rodando:
+  netstat -ano | find "9222"   :: Chrome Debug
+  netstat -ano | find "8001"   :: Backend
+  netstat -ano | find "5173"   :: Frontend
+
+
+================================================================================
+
+                  BOA SORTE E BOM TRABALHO!
+
+================================================================================

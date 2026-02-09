@@ -19,6 +19,7 @@ function SellersPage() {
   const [maxBsr, setMaxBsr] = useState('')
   const [maxFbaSellers, setMaxFbaSellers] = useState('')
   const [excludeAmazon, setExcludeAmazon] = useState(false)
+  const [onlyWithUpc, setOnlyWithUpc] = useState(false)  // NOVO: filtro para produtos com UPC
   const [availableSellers, setAvailableSellers] = useState([])
 
   const loadProducts = async (page = 1) => {
@@ -51,6 +52,9 @@ function SellersPage() {
       }
       if (excludeAmazon) {
         url += `&exclude_amazon=true`
+      }
+      if (onlyWithUpc) {
+        url += `&only_with_upc=true`
       }
 
       const res = await fetch(url)
@@ -85,13 +89,13 @@ function SellersPage() {
     }
   }
 
-  // Recarregar produtos quando os filtros mudarem (mas não no primeiro carregamento)
+  // Recarregar produtos quando os filtros mudarem
   useEffect(() => {
-    if (cacheId && data) {
+    if (cacheId) {
       loadProducts(1)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sellerFilter, minPrice, maxPrice, minBsr, maxBsr, maxFbaSellers, excludeAmazon])
+  }, [sellerFilter, minPrice, maxPrice, minBsr, maxBsr, maxFbaSellers, excludeAmazon, onlyWithUpc])
 
   const applyFilters = () => {
     setCurrentPage(1)
@@ -106,6 +110,7 @@ function SellersPage() {
     setMaxBsr('')
     setMaxFbaSellers('')
     setExcludeAmazon(false)
+    setOnlyWithUpc(false)
   }
 
   const handleUpload = async (e) => {
@@ -218,6 +223,9 @@ function SellersPage() {
       }
       if (excludeAmazon) {
         url += `&exclude_amazon=true`
+      }
+      if (onlyWithUpc) {
+        url += `&only_with_upc=true`
       }
 
       const res = await fetch(url)
@@ -415,11 +423,24 @@ function SellersPage() {
                 </label>
               </div>
 
+              <div className="filter-group">
+                <label htmlFor="only-with-upc" className="checkbox-label">
+                  <input
+                    id="only-with-upc"
+                    type="checkbox"
+                    checked={onlyWithUpc}
+                    onChange={(e) => setOnlyWithUpc(e.target.checked)}
+                    className="filter-checkbox"
+                  />
+                  Apenas produtos com UPC
+                </label>
+              </div>
+
               <div className="filter-actions">
                 <button
                   onClick={clearFilters}
                   className="btn btn-secondary"
-                  disabled={!sellerFilter && !minPrice && !maxPrice && !minBsr && !maxBsr && !maxFbaSellers && !excludeAmazon}
+                  disabled={!sellerFilter && !minPrice && !maxPrice && !minBsr && !maxBsr && !maxFbaSellers && !excludeAmazon && !onlyWithUpc}
                 >
                   Limpar Filtros
                 </button>
@@ -536,6 +557,7 @@ function SellersPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="amazon-link"
+                        title="Abrir produto na Amazon"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>

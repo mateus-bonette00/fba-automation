@@ -132,7 +132,8 @@ async def get_products(
     min_bsr: Optional[int] = None,
     max_bsr: Optional[int] = None,
     max_fba_sellers: Optional[int] = None,
-    exclude_amazon: bool = False
+    exclude_amazon: bool = False,
+    only_with_upc: bool = False
 ):
     try:
         if cache_id not in uploaded_data_cache:
@@ -143,7 +144,7 @@ async def get_products(
         columns = cached["columns"]
 
         # Log dos filtros recebidos
-        print(f"Filtros recebidos - seller: {seller}, min_price: {min_price}, max_price: {max_price}, min_bsr: {min_bsr}, max_bsr: {max_bsr}, max_fba_sellers: {max_fba_sellers}, exclude_amazon: {exclude_amazon}")
+        print(f"Filtros recebidos - seller: {seller}, min_price: {min_price}, max_price: {max_price}, min_bsr: {min_bsr}, max_bsr: {max_bsr}, max_fba_sellers: {max_fba_sellers}, exclude_amazon: {exclude_amazon}, only_with_upc: {only_with_upc}")
         print(f"Total de produtos antes dos filtros: {len(df)}")
 
         # Aplicar filtros
@@ -319,6 +320,16 @@ async def get_products(
             df = df[mask]
             print(f"Produtos após excluir Amazon: {len(df)} (eram {before_count})")
 
+        # Filtro para produtos com UPC apenas
+        if only_with_upc:
+            upc_col = columns["upc"]
+            if upc_col:
+                before_count = len(df)
+                df = df[df[upc_col].notna() & (df[upc_col].astype(str).str.strip() != "")]
+                print(f"Produtos após filtro UPC (apenas com UPC): {len(df)} (eram {before_count})")
+            else:
+                print("Coluna de UPC não encontrada!")
+
         # Calcular paginação após filtros
         total = len(df)
         start_idx = (page - 1) * per_page
@@ -368,6 +379,9 @@ async def get_products(
                 except KeyError:
                     pass
 
+            # Criar link direto para Amazon
+            amazon_link = f"https://www.amazon.com/dp/{asin_val}" if asin_val else None
+
             product = {
                 "image": image_val,
                 "title": title_val,
@@ -375,6 +389,7 @@ async def get_products(
                 "asin": asin_val,
                 "price": price_val,
                 "seller": seller_val,
+                "amazon_link": amazon_link,  # Link direto para o produto
             }
             products.append(product)
 
@@ -424,7 +439,8 @@ async def download_filtered_csv(
     min_bsr: Optional[int] = None,
     max_bsr: Optional[int] = None,
     max_fba_sellers: Optional[int] = None,
-    exclude_amazon: bool = False
+    exclude_amazon: bool = False,
+    only_with_upc: bool = False
 ):
     """
     Baixa CSV dos produtos filtrados com links da Amazon, Google UPC e Google Título
@@ -437,7 +453,7 @@ async def download_filtered_csv(
         df = cached["df"].copy()
         columns = cached["columns"]
 
-        print(f"Download CSV - Filtros recebidos - seller: {seller}, min_price: {min_price}, max_price: {max_price}, min_bsr: {min_bsr}, max_bsr: {max_bsr}, max_fba_sellers: {max_fba_sellers}, exclude_amazon: {exclude_amazon}")
+        print(f"Download CSV - Filtros recebidos - seller: {seller}, min_price: {min_price}, max_price: {max_price}, min_bsr: {min_bsr}, max_bsr: {max_bsr}, max_fba_sellers: {max_fba_sellers}, exclude_amazon: {exclude_amazon}, only_with_upc: {only_with_upc}")
         print(f"Total de produtos antes dos filtros: {len(df)}")
 
         # Aplicar os mesmos filtros do endpoint get-products
@@ -515,6 +531,16 @@ async def download_filtered_csv(
                 mask = mask & buybox_mask
             df = df[mask]
             print(f"Produtos após excluir Amazon: {len(df)} (eram {before_count})")
+
+        # Filtro para produtos com UPC apenas
+        if only_with_upc:
+            upc_col = columns["upc"]
+            if upc_col:
+                before_count = len(df)
+                df = df[df[upc_col].notna() & (df[upc_col].astype(str).str.strip() != "")]
+                print(f"Produtos após filtro UPC (apenas com UPC): {len(df)} (eram {before_count})")
+            else:
+                print("Coluna de UPC não encontrada!")
 
         print(f"Total de produtos após todos os filtros para CSV: {len(df)}")
 

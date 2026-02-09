@@ -36,6 +36,7 @@ class TitleExtractor:
         self.methods_tried = []
         self.title_found = None
         self.method_used = None
+        self.additional_info = []  # Armazena Part Number, Model, SKU, etc
 
     def clean_title(self, title: str) -> Optional[str]:
         """Limpa e valida um título"""
@@ -345,14 +346,266 @@ class TitleExtractor:
 
         return None
 
+    def extract_additional_info(self, soup: BeautifulSoup, base_title: str = None) -> List[str]:
+        """
+        Método NOVO: Extrai informações adicionais como Part Number, Model, SKU, Brand
+        que geralmente aparecem abaixo do título do produto
+
+        IMPORTANTE: Foca apenas no contexto próximo ao título principal para evitar
+        pegar informações de produtos relacionados/recomendados
+        """
+        additional_info = []
+
+        # Palavras-chave que indicam informações importantes
+        keywords = [
+            'part number', 'partnumber', 'part #', 'part no',
+            'model', 'model number', 'model #', 'modelo',
+            'sku', 'item #', 'item number', 'item no',
+            'brand', 'marca', 'manufacturer',
+            'product code', 'código', 'reference',
+            'upc', 'ean', 'isbn', 'asin',
+            'mpn', 'mfr', 'mfg part',
+            'scale', 'escala',  # IMPORTANTE: para capturar "Scale: 1:64"
+        ]
+
+        # Encontra o container principal do produto (próximo ao título)
+        product_container = None
+        h1_tag = soup.find('h1')
+
+        if h1_tag:
+            # Tenta encontrar o container pai do produto
+            # Procura por divs/sections comuns que englobam o produto principal
+            for parent in h1_tag.parents:
+                if parent.name in ['section', 'div', 'article', 'main']:
+                    # Verifica se tem classes que indicam ser o container do produto
+                    classes = ' '.join(parent.get('class', [])).lower()
+                    if any(kw in classes for kw in ['product', 'item', 'detail', 'pdp', 'main-content']):
+                        product_container = parent
+                        break
+
+            # Se não achou container específico, usa um escopo limitado ao redor do h1
+            if not product_container:
+                # Pega apenas os próximos 3 irmãos do h1
+                product_container = soup.new_tag('div')
+                product_container.append(h1_tag)
+                for i, sibling in enumerate(h1_tag.next_siblings):
+                    if i >= 10:  # Limita a 10 elementos seguintes
+                        break
+                    if hasattr(sibling, 'name'):
+                        product_container.append(sibling)
+
+        # Se não achou h1, usa todo o soup mas com restrições
+        if not product_container:
+            product_container = soup
+
+        # 1. Busca em meta tags (PRIORIDADE: pega brand direto das meta tags)
+        for meta in soup.find_all('meta'):
+            name = (meta.get('name') or meta.get('property') or meta.get('itemprop') or '').lower()
+            content = meta.get('content', '').strip()
+
+            if content and len(content) < 100:
+                # Brand/Manufacturer em meta tags tem alta prioridade
+                if any(kw in name for kw in ['brand', 'manufacturer']):
+                    additional_info.append(content)
+                # Outras informações úteis
+                elif any(kw in name for kw in ['mpn', 'sku', 'gtin', 'model']):
+                    additional_info.append(content)
+
+        # 2. Busca em elementos com classes/ids específicos (APENAS no container do produto)
+        selectors = [
+            '.part-number', '#part-number', '[data-part-number]',
+            '.model-number', '#model-number', '[data-model]',
+            '.sku', '#sku', '[data-sku]',
+            '.product-code', '#product-code',
+            '.item-number', '#item-number',
+            '.brand-name', '#brand', '[data-brand]',
+            '.manufacturer', '[data-manufacturer]',
+            '[itemprop="mpn"]', '[itemprop="sku"]', '[itemprop="brand"]',
+            '[itemprop="model"]', '[itemprop="productID"]',
+        ]
+
+        for selector in selectors:
+            try:
+                # USA product_container ao invés de soup
+                elements = product_container.select(selector)
+                for elem in elements:
+                    text = elem.get_text(strip=True)
+                    # Também tenta pegar de atributos data-*
+                    if not text:
+                        for attr in elem.attrs:
+                            if attr.startswith('data-'):
+                                val = elem.get(attr)
+                                if isinstance(val, str) and len(val) < 100:
+                                    text = val
+                                    break
+
+                    if text and len(text) < 100:
+                        additional_info.append(text)
+            except Exception:
+                continue
+
+        # 3. Busca em textos com padrões "Label: Value" (APENAS no container do produto)
+        # Ex: "Part Number: LP64770", "Model: ABC123"
+        text_content = product_container.get_text()
+
+        for keyword in keywords:
+            # Padrão: "keyword: value" ou "keyword value"
+            # IMPORTANTE: Inclui : no padrão de captura para pegar "1:64", "1/32", etc
+            patterns = [
+                rf'{re.escape(keyword)}\s*:\s*([A-Z0-9\-_#\/:\.]+)',  # Captura até encontrar espaço/quebra
+                rf'{re.escape(keyword)}\s+([A-Z0-9\-_#\/:\.]+)',      # Sem dois pontos
+            ]
+
+            for pattern in patterns:
+                matches = re.finditer(pattern, text_content, re.IGNORECASE)
+                for match in matches:
+                    value = match.group(1).strip()
+                    # Remove espaços internos excessivos
+                    value = ' '.join(value.split())
+                    if len(value) >= 2 and len(value) < 50:
+                        additional_info.append(value)
+
+        # 4. Busca em listas de detalhes (dl/dt/dd) - APENAS no container
+        for dl in product_container.find_all('dl'):
+            dt_elements = dl.find_all('dt')
+            dd_elements = dl.find_all('dd')
+
+            for dt, dd in zip(dt_elements, dd_elements):
+                label = dt.get_text(strip=True).lower()
+                value = dd.get_text(strip=True)
+
+                if any(kw in label for kw in keywords) and value and len(value) < 100:
+                    additional_info.append(value)
+
+        # 5. Busca em tabelas de especificações - APENAS no container
+        for table in product_container.find_all('table'):
+            rows = table.find_all('tr')
+            for row in rows:
+                cells = row.find_all(['th', 'td'])
+                if len(cells) >= 2:
+                    label = cells[0].get_text(strip=True).lower()
+                    value = cells[1].get_text(strip=True)
+
+                    if any(kw in label for kw in keywords) and value and len(value) < 100:
+                        additional_info.append(value)
+
+        # 6. Busca SOMENTE no primeiro h1 encontrado (título principal)
+        h1_tag = soup.find('h1')  # Pega apenas o PRIMEIRO h1
+        if h1_tag:
+            # Pega elementos irmãos (siblings) próximos ao h1
+            for sibling in list(h1_tag.next_siblings)[:5]:  # Limita a 5 elementos seguintes
+                if hasattr(sibling, 'get_text'):
+                    text = sibling.get_text(strip=True)
+
+                    # Verifica se contém padrões de informação adicional
+                    for keyword in keywords:
+                        if keyword in text.lower():
+                            # Extrai apenas o valor
+                            match = re.search(rf'{re.escape(keyword)}\s*:?\s*([A-Z0-9\-_#\/]+)', text, re.IGNORECASE)
+                            if match:
+                                value = match.group(1).strip()
+                                if len(value) >= 3 and len(value) < 50:
+                                    additional_info.append(value)
+                            # Se não achou padrão, mas o texto é curto, adiciona ele todo
+                            elif len(text) < 100 and len(text) > 3:
+                                additional_info.append(text)
+
+        # Remove duplicatas e filtra ruído com priorização
+        seen = set()
+        unique_info = []
+
+        # Palavras para ignorar (muito genéricas ou inúteis)
+        ignore_words = {
+            'number', 'model', 'brand', 'item', 'part', 'sku', 'code',
+            'product', 'manufacturer', 'reference', 'details', 'info'
+        }
+
+        # Separa em categorias para priorizar
+        part_numbers = []
+        brands = []
+        models = []
+        others = []
+
+        for info in additional_info:
+            info_clean = info.strip()
+
+            # Ignora se muito curto ou muito longo
+            if len(info_clean) < 2 or len(info_clean) > 80:
+                continue
+
+            # Ignora se for apenas uma palavra genérica
+            if info_clean.lower() in ignore_words:
+                continue
+
+            # Ignora se já foi visto
+            if info_clean in seen:
+                continue
+
+            seen.add(info_clean)
+
+            # Categoriza a informação
+            info_lower = info_clean.lower()
+
+            # Marcas conhecidas de die-cast/brinquedos
+            known_brands = [
+                'john deere', 'deere',
+                'tomy', 'ertl',
+                'matchbox', 'hot wheels', 'hotwheels',
+                'johnny lightning',
+                'maisto', 'greenlight',
+                'jada', 'mattel',
+                'bruder', 'siku',
+                'corgi', 'dinky',
+                'autoworld', 'auto world',
+                'racing champions',
+                'm2 machines',
+                'schleich', 'papo'
+            ]
+
+            if any(brand in info_lower for brand in known_brands):
+                brands.append(info_clean)
+            # Modelos/Escala: 1:64, 1/32, "1 64 scale", etc
+            elif re.search(r'\d+[:/]\d+|scale.*\d+:\d+|\d+:\d+.*scale', info_lower):
+                # Limpa "Scale: " do texto se tiver
+                model_clean = re.sub(r'scale\s*:?\s*', '', info_clean, flags=re.I).strip()
+                if model_clean:
+                    models.append(model_clean)
+            # Part Numbers - APENAS para categorizar, NÃO será usado!
+            elif re.match(r'^[A-Z]{1,4}\d+[A-Z]?$', info_clean, re.I):
+                part_numbers.append(info_clean)
+            else:
+                others.append(info_clean)
+
+        # NOVA ESTRATÉGIA: Captura APENAS Brand + Modelo
+        # IGNORA Part Numbers completamente (não funcionam bem na Amazon)
+        result = []
+
+        # 1. Adiciona marca (prioriza "John Deere" completo)
+        for brand in brands:
+            if 'deere' in brand.lower():
+                result.append(brand)
+                break
+        if not result and brands:
+            result.append(brands[0])
+
+        # 2. Adiciona modelo/escala (1:64, 1/32, etc)
+        if models:
+            result.append(models[0])
+
+        # IMPORTANTE: NÃO adiciona Part Numbers!
+        # Part Numbers (LP84525, MB-2024-HVL75) não funcionam na busca da Amazon
+
+        return result[:2]  # Limita a 2 itens: Brand + Modelo
+
     def extract_all_methods(self, html: str) -> Optional[str]:
         """
         Executa TODOS os métodos de extração em ordem de prioridade
-        Retorna o primeiro título válido encontrado
+        Retorna o título completo com informações adicionais (Part Number, Model, etc)
         """
         self.methods_tried = []
         self.title_found = None
         self.method_used = None
+        self.additional_info = []
 
         soup = BeautifulSoup(html, 'html.parser')
 
@@ -370,17 +623,40 @@ class TitleExtractor:
             self.extract_from_largest_text,
         ]
 
+        # Extrai o título base
+        base_title = None
         for method in extraction_methods:
             try:
                 result = method(soup)
                 if result:
+                    base_title = result
                     self.title_found = result
                     self.method_used = self.methods_tried[-1] if self.methods_tried else 'unknown'
-                    return result
+                    break
             except Exception:
                 continue
 
-        return None
+        # Se não achou título, retorna None
+        if not base_title:
+            return None
+
+        # Extrai informações adicionais (Part Number, Model, SKU, etc)
+        try:
+            additional_info = self.extract_additional_info(soup, base_title)
+            self.additional_info = additional_info
+        except Exception:
+            additional_info = []
+
+        # Combina título com informações adicionais
+        if additional_info:
+            # Junta as informações adicionais em uma string
+            info_str = ' | '.join(additional_info)
+            # Retorna: "Título Original | Part Number | Model | etc"
+            full_title = f"{base_title} | {info_str}"
+            self.title_found = full_title
+            return full_title
+        else:
+            return base_title
 
     def get_extraction_stats(self) -> Dict[str, Any]:
         """Retorna estatísticas sobre a extração"""
@@ -388,7 +664,8 @@ class TitleExtractor:
             'title_found': self.title_found,
             'method_used': self.method_used,
             'methods_tried': len(self.methods_tried),
-            'all_methods': self.methods_tried
+            'all_methods': self.methods_tried,
+            'additional_info': self.additional_info
         }
 
 

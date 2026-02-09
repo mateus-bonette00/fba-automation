@@ -16,8 +16,8 @@ function CaptureTabsPage() {
 
   // ===== NOVO: Controles de performance =====
   const [fastMode, setFastMode] = useState(true)               // fast=1
-  const [concurrency, setConcurrency] = useState(6)            // 6 em paralelo
-  const [perPageTimeoutMs, setPerPageTimeoutMs] = useState(1200) // 1200 ms
+  const [concurrency, setConcurrency] = useState(15)           // 15 em paralelo - BALANCEADO (rápido + confiável)
+  const [perPageTimeoutMs, setPerPageTimeoutMs] = useState(3000) // 3000 ms (3 segundos) - BALANCEADO
 
   // ===== Persistência dos controles de performance =====
   useEffect(() => {
@@ -116,8 +116,78 @@ function CaptureTabsPage() {
     })
   }
 
-  const buildAmazonSearchUrl = (query) => {
-    return `https://www.amazon.com/s?k=${encodeURIComponent(query)}`
+  /**
+   * Estratégia SIMPLIFICADA de busca na Amazon
+   *
+   * NOVA ESTRATÉGIA:
+   * - Pega APENAS: Brand + Título + Modelo (se tiver)
+   * - IGNORA Part Number (não funciona bem na Amazon)
+   * - Remove separadores | e junta tudo em uma query natural
+   *
+   * Exemplo:
+   *   Input:  "2024 Porsche Taycan | Item Number:MB-2024-HVL75 | Matchbox | 1:64"
+   *   Output: "Matchbox 2024 Porsche Taycan 1:64"
+   */
+  const buildAmazonSearchUrl = (fullTitle) => {
+    const parts = fullTitle.split('|').map(p => p.trim())
+
+    let brand = null
+    let model = null
+    let baseTitle = parts[0] // Primeiro item sempre é o título base
+
+    // Procurar Brand e Model nas outras partes
+    for (const part of parts) {
+      const lowerPart = part.toLowerCase()
+
+      // IGNORA Part Number/Item Number/SKU completamente
+      if (lowerPart.includes('part number:') ||
+          lowerPart.includes('item number:') ||
+          lowerPart.includes('sku:') ||
+          lowerPart.includes('model number:')) {
+        continue // Pula essa parte
+      }
+
+      // Brand/Manufacturer
+      if (lowerPart.includes('brand:') || lowerPart.includes('manufacturer:')) {
+        brand = part.split(':')[1]?.trim()
+      }
+      // Marcas conhecidas (sem prefixo "Brand:")
+      else if (lowerPart.includes('john deere') || lowerPart === 'john deere') {
+        brand = part
+      } else if (lowerPart.includes('tomy') || lowerPart === 'tomy') {
+        brand = part
+      } else if (lowerPart.includes('ertl') || lowerPart === 'ertl') {
+        brand = part
+      } else if (lowerPart.includes('johnny lightning') || lowerPart === 'johnny lightning') {
+        brand = part
+      } else if (lowerPart.includes('matchbox') || lowerPart === 'matchbox') {
+        brand = part
+      } else if (lowerPart.includes('hot wheels') || lowerPart === 'hot wheels') {
+        brand = part
+      }
+      // Modelo/Escala (1:64, 1/32, etc)
+      else if (part.match(/^\d+:\d+$/) || part.match(/^\d+\/\d+$/)) {
+        model = part
+      }
+    }
+
+    // Monta a query: Brand + Título + Modelo
+    let searchQuery = ''
+
+    if (brand) {
+      searchQuery += brand + ' '
+    }
+
+    searchQuery += baseTitle
+
+    if (model) {
+      searchQuery += ' ' + model
+    }
+
+    // Limpa espaços extras
+    searchQuery = searchQuery.replace(/\s+/g, ' ').trim()
+
+    return `https://www.amazon.com/s?k=${encodeURIComponent(searchQuery)}`
   }
 
   const handleButtonClick = (buttonId) => {
@@ -129,6 +199,45 @@ function CaptureTabsPage() {
   }
 
   const isButtonClicked = (buttonId) => clickedButtons.has(buttonId)
+
+  // Função para abrir todas as abas de uma vez na ordem: Fornecedor, UPC, Título
+  // IMPORTANTE: Usa createElement + click() para garantir abertura em background
+  const handleOpenAllLinks = (tab, index) => {
+    const openInBackground = (url, delay) => {
+      setTimeout(() => {
+        const a = document.createElement('a')
+        a.href = url
+        a.target = '_blank'
+        a.rel = 'noopener noreferrer'
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+      }, delay)
+    }
+
+    let delay = 0
+
+    // 1. Abrir fornecedor primeiro
+    openInBackground(tab.url, delay)
+    delay += 150
+
+    // 2. Abrir Amazon com UPC (se tiver)
+    if (tab.upc) {
+      openInBackground(buildAmazonSearchUrl(tab.upc), delay)
+      delay += 150
+    }
+
+    // 3. Abrir Amazon com Título por último (se tiver)
+    if (tab.product_title) {
+      openInBackground(buildAmazonSearchUrl(tab.product_title), delay)
+    }
+
+    // Marcar todos os botões como clicados
+    handleButtonClick(`supplier-${index}`)
+    handleButtonClick(`upc-${index}`)
+    handleButtonClick(`title-${index}`)
+    handleButtonClick(`all-${index}`)
+  }
 
   const handleClearAll = () => {
     setTabs(null)
@@ -164,8 +273,22 @@ function CaptureTabsPage() {
 
   const handleShowDebugTabs = async () => {
     setShowingDebug(true)
+    setError(null)
     try {
-      const res = await fetch(`${window.API_URL}/api/capture/list-tabs?devtools_url=${encodeURIComponent(devtoolsUrl)}`)
+      // IMPORTANTE: Usa o mesmo endpoint de captura completa para extrair títulos e UPCs
+      const params = new URLSearchParams({
+        devtools_url: devtoolsUrl,
+        include_pattern: includePattern || '',
+        exclude_pattern: excludePattern || '',
+        fast: fastMode ? '1' : '0',
+        concurrency: String(concurrency || 1),
+        per_page_timeout_ms: String(perPageTimeoutMs || 1200),
+      })
+
+      const res = await fetch(`${window.API_URL}/api/capture/capture-tabs?${params}`, {
+        method: 'POST'
+      })
+
       if (!res.ok) throw new Error('Erro ao listar abas')
       const result = await res.json()
       setDebugTabs(result)
@@ -485,53 +608,18 @@ function CaptureTabsPage() {
                     <td className="method-cell">{tab.upc_method}</td>
                     <td className="links-cell">
                       <div className="button-group">
-                        <a
-                          href={tab.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`link-btn link-btn-supplier ${isButtonClicked(`supplier-${i}`) ? 'clicked' : ''}`}
-                          title="Abrir fornecedor"
-                          onClick={() => handleButtonClick(`supplier-${i}`)}
+                        <button
+                          onClick={() => handleOpenAllLinks(tab, i)}
+                          className={`link-btn link-btn-all ${isButtonClicked(`all-${i}`) ? 'clicked' : ''}`}
+                          title="Clique para abrir tudo em background"
                         >
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                             <polyline points="15 3 21 3 21 9"></polyline>
                             <line x1="10" y1="14" x2="21" y2="3"></line>
                           </svg>
-                          Fornecedor
-                        </a>
-                        {tab.upc && (
-                          <a
-                            href={buildAmazonSearchUrl(tab.upc)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`link-btn link-btn-upc ${isButtonClicked(`upc-${i}`) ? 'clicked' : ''}`}
-                            title="Buscar por UPC na Amazon"
-                            onClick={() => handleButtonClick(`upc-${i}`)}
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <circle cx="11" cy="11" r="8"></circle>
-                              <path d="m21 21-4.35-4.35"></path>
-                            </svg>
-                            UPC
-                          </a>
-                        )}
-                        {tab.product_title && (
-                          <a
-                            href={buildAmazonSearchUrl(tab.product_title)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`link-btn link-btn-title ${isButtonClicked(`title-${i}`) ? 'clicked' : ''}`}
-                            title="Buscar por título na Amazon"
-                            onClick={() => handleButtonClick(`title-${i}`)}
-                          >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <circle cx="11" cy="11" r="8"></circle>
-                              <path d="m21 21-4.35-4.35"></path>
-                            </svg>
-                            Título
-                          </a>
-                        )}
+                          Abrir Tudo
+                        </button>
                       </div>
                     </td>
                   </tr>

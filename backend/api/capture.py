@@ -445,67 +445,59 @@ async def _same_domain_probe(product_url: str, page: Page, data: Dict[str, Any],
 
 # ===================== Extração da página =====================
 async def _extract_page_fast(page: Page, timeout_ms: int = 1800) -> Dict[str, Any]:
-    # Scroll na página para carregar conteúdo lazy-loaded
-    try:
-        await page.evaluate("""
-            () => {
-                window.scrollTo(0, document.body.scrollHeight / 2);
-                window.scrollTo(0, document.body.scrollHeight);
-                window.scrollTo(0, 0);
-            }
-        """)
-        await asyncio.sleep(0.5)
-    except Exception:
-        pass
+    # OTIMIZAÇÃO: Removido scroll e sleep - muito lento!
+    # Scroll na página para carregar conteúdo lazy-loaded (DESABILITADO para velocidade)
+    # try:
+    #     await page.evaluate("""
+    #         () => {
+    #             window.scrollTo(0, document.body.scrollHeight / 2);
+    #             window.scrollTo(0, document.body.scrollHeight);
+    #             window.scrollTo(0, 0);
+    #         }
+    #     """)
+    #     await asyncio.sleep(0.5)
+    # except Exception:
+    #     pass
 
     d = await _read_quick(page, timeout_ms)
 
-    # SEMPRE captura o HTML completo para os extratores avançados
-    html = None
-    try:
-        html = await page.content()
-    except Exception:
-        pass
-
-    # Extração de título
+    # Extração de título - método rápido
     title = _extract_title(d)
-    if (not title or title == "Sem título") and html:
+
+    # Extração de UPC - método rápido primeiro
+    upc, source = _extract_upc_local(d)
+
+    # Variável para armazenar HTML (pega apenas uma vez)
+    html = None
+
+    # Se não achou UPC pelo método rápido, usa extrator avançado
+    if not upc:
         try:
-            title_extractor = TitleExtractor()
-            title_advanced = title_extractor.extract_all_methods(html)
-            if title_advanced:
-                title = title_advanced
+            html = await page.content()
+            if html:
+                # Usa extrator de UPC completo (BeautifulSoup) - TODOS os 26+ métodos
+                extractor = UPCExtractor()
+                upc_advanced = extractor.extract_all_methods(html)
+                if upc_advanced:
+                    upc = upc_advanced
+                    source = f"advanced:{extractor.method_used}" if extractor.method_used else "advanced"
         except Exception:
             pass
 
-    # Extração de UPC - SEMPRE tenta métodos rápidos E avançados
-    upc, source = _extract_upc_local(d)
-    methods_tried = []
-    debug_info = {}
-
-    # SEMPRE usa o extrator avançado (não apenas como fallback!)
-    if html:
+    # Se não achou título adequado, tenta extrator avançado de título
+    if not title or title == "Sem título":
         try:
-            extractor = UPCExtractor()
-            upc_advanced = extractor.extract_all_methods(html)
-            methods_tried = extractor.methods_tried
-            if upc_advanced:
-                # Se não tinha UPC, usa o avançado
-                if not upc:
-                    upc = upc_advanced
-                    source = f"advanced:{extractor.method_used}" if extractor.method_used else "advanced"
-                # Se tinha UPC mas o avançado encontrou um diferente, prefere o avançado (mais confiável)
-                elif upc != upc_advanced:
-                    upc = upc_advanced
-                    source = f"advanced:{extractor.method_used}" if extractor.method_used else "advanced"
+            # Se ainda não pegou HTML, pega agora
+            if not html:
+                html = await page.content()
 
-            debug_info = {
-                "methods_tried": methods_tried,
-                "total_methods": len(methods_tried),
-                "method_that_worked": extractor.method_used
-            }
+            if html:
+                from .title_extractor import TitleExtractor
+                title_extractor = TitleExtractor()
+                title_advanced = title_extractor.extract_all_methods(html)
+                if title_advanced and title_advanced != "Sem título":
+                    title = title_advanced
         except Exception:
-            # Log do erro silenciosamente
             pass
 
     result = {
@@ -514,10 +506,6 @@ async def _extract_page_fast(page: Page, timeout_ms: int = 1800) -> Dict[str, An
         "upc": upc or "",
         "upc_method": source or ""
     }
-
-    # Adiciona informações de debug se disponível
-    if debug_info:
-        result["_debug"] = debug_info
 
     return result
 
@@ -568,12 +556,12 @@ async def capture_tabs(
     include_pattern: str = "",
     exclude_pattern: str = "",
     fast: int = 1,
-    concurrency: int = 4,
-    per_page_timeout_ms: int = 1800,
+    concurrency: int = 15,          # OTIMIZADO: 15 paralelos (balanceado)
+    per_page_timeout_ms: int = 3000, # OTIMIZADO: 3s (balanceado)
     skip: int = 0,
     limit: int = 500,
-    pause_ms: int = 150,
-    same_domain_probe: int = 1,
+    pause_ms: int = 0,              # ZERO delay
+    same_domain_probe: int = 0,     # DESABILITADO
     aggressive_probe: int = 0,
     use_cache: int = 1,
     debug: int = 0
@@ -599,9 +587,9 @@ async def capture_tabs(
                 r'about:',
                 r'chrome://',
                 r'chrome-extension://',
+                r'opera://',           # Páginas internas do Opera
                 r'devtools://',
                 r'localhost:9222',
-                r'\?id=\d+$',  # URLs tipo ?id=48561201 (páginas de teste/karma)
             ]
             auto_exclude_re = re.compile('|'.join(auto_exclude_patterns), re.I)
 
@@ -639,10 +627,13 @@ async def capture_tabs(
                 async with sem:
                     url = p.url or ""
                     try:
-                        try:
-                            await p.wait_for_load_state("domcontentloaded", timeout=per_page_timeout_ms)
-                        except Exception:
-                            pass
+                        # OTIMIZAÇÃO: Não espera load state - usa o conteúdo atual da página
+                        # Se fast mode está ativado, pula wait_for_load_state completamente
+                        if not fast:
+                            try:
+                                await p.wait_for_load_state("domcontentloaded", timeout=per_page_timeout_ms)
+                            except Exception:
+                                pass
 
                         data = await _extract_page_fast(p, per_page_timeout_ms)
                         raw = data.pop("_raw", {})

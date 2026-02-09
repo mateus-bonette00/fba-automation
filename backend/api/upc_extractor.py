@@ -88,12 +88,16 @@ class UPCExtractor:
                 # Busca recursiva em objetos
                 def search_obj(obj):
                     if isinstance(obj, dict):
-                        # Busca direta por chaves conhecidas
+                        # PRIORIDADE 1: Busca direta por UPC/GTIN (NÃO MPN!)
                         for key in ['gtin', 'gtin12', 'gtin13', 'gtin14', 'upc', 'ean', 'ean13', 'productID']:
                             if key in obj:
                                 upc = self.normalize_upc(str(obj[key]))
                                 if upc:
                                     return upc
+
+                        # Se encontrar mpn, ignora completamente
+                        if 'mpn' in obj:
+                            pass  # Ignora MPN - não é UPC!
 
                         # Busca em offers
                         if 'offers' in obj:
@@ -142,7 +146,11 @@ class UPCExtractor:
             for meta in metas:
                 attr_value = meta.get(attr, '').lower()
 
-                # Verifica se o atributo contém palavras-chave
+                # IMPORTANTE: Ignora MPN (Manufacturer Part Number) - queremos apenas UPC
+                if 'mpn' in attr_value or 'partnumber' in attr_value or 'part_number' in attr_value:
+                    continue
+
+                # Verifica se o atributo contém palavras-chave de UPC
                 if any(kw in attr_value for kw in ['gtin', 'upc', 'barcode', 'ean', 'productid']):
                     content = meta.get('content', '')
                     upc = self.normalize_upc(content)
@@ -264,7 +272,7 @@ class UPCExtractor:
 
         text = soup.get_text(' ', strip=True)
 
-        # Padrões para texto rotulado
+        # Padrões para texto rotulado (UPC/GTIN APENAS, NÃO MPN!)
         patterns = [
             r'UPC\s*[:|\-]?\s*(\d{12,14})',
             r'GTIN-?1[2-4]\s*[:|\-]?\s*(\d{12,14})',
@@ -272,12 +280,21 @@ class UPCExtractor:
             r'EAN\s*[:|\-]?\s*(\d{13})',
             r'Item\s*#?\s*[:|\-]?\s*(\d{12,14})',
             r'Product\s*Code\s*[:|\-]?\s*(\d{12,14})',
-            r'Model\s*#?\s*[:|\-]?\s*(\d{12,14})',
+            # REMOVIDO: Model # - pode confundir com MPN
         ]
 
         for pattern in patterns:
             match = re.search(pattern, text, re.I)
             if match:
+                # Verifica se não está perto de "MPN" no contexto
+                context_start = max(0, match.start() - 50)
+                context_end = min(len(text), match.end() + 50)
+                context = text[context_start:context_end].lower()
+
+                # Se "mpn" aparece perto, ignora
+                if 'mpn' in context or 'part number' in context:
+                    continue
+
                 upc = self.normalize_upc(match.group(1))
                 if upc:
                     return upc
@@ -285,10 +302,11 @@ class UPCExtractor:
         return None
 
     def extract_from_tables(self, soup: BeautifulSoup) -> Optional[str]:
-        """Método 7: Busca em tabelas de especificações"""
+        """Método 7: Busca em tabelas de especificações (linhas e colunas)"""
         self.methods_tried.append('tables')
 
         for table in soup.find_all('table'):
+            # MÉTODO 1: Tabela com linhas (label na primeira célula, valor na segunda)
             rows = table.find_all('tr')
             for row in rows:
                 cells = row.find_all(['td', 'th'])
@@ -300,6 +318,32 @@ class UPCExtractor:
                         upc = self.normalize_upc(value)
                         if upc:
                             return upc
+
+            # MÉTODO 2: Tabela com COLUNAS (cabeçalho "UPC" na primeira linha, valores abaixo)
+            # Exemplo: | Option | UPC | MPN |
+            #          | Black  | 012527018741 | 601062 |
+            if rows:
+                # Pega primeira linha (cabeçalho)
+                header_row = rows[0]
+                headers = header_row.find_all(['th', 'td'])
+
+                # Procura índice da coluna "UPC"
+                upc_col_index = None
+                for idx, header in enumerate(headers):
+                    header_text = header.get_text(strip=True).lower()
+                    if any(kw in header_text for kw in self.CONTEXT_KEYWORDS):
+                        upc_col_index = idx
+                        break
+
+                # Se encontrou coluna UPC, pega valor da segunda linha em diante
+                if upc_col_index is not None:
+                    for row in rows[1:]:  # Pula cabeçalho
+                        cells = row.find_all(['td', 'th'])
+                        if len(cells) > upc_col_index:
+                            value = cells[upc_col_index].get_text(strip=True)
+                            upc = self.normalize_upc(value)
+                            if upc:
+                                return upc
 
         return None
 

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Rápido - FBA Automation (Windows)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .step h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .step code {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .warning h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .success {
+            background: #d1e7dd;
+            border-left: 5px solid #198754;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .success h3 {
+            color: #0f5132;
+            margin-bottom: 10px;
+        }
+
+        .command-box {
+            background: #212529;
+            color: #0dff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .badge.new {
+            background: #28a745;
+        }
+
+        .badge.important {
+            background: #dc3545;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        ul li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .footer {
+            background: #212529;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 FBA AUTOMATION</h1>
+            <p>Guia Rápido de Instalação para Windows</p>
+        </div>
+
+        <div class="content">
+            <!-- MÉTODO RÁPIDO -->
+            <div class="section">
+                <h2>⚡ Método Rápido (Recomendado)</h2>
+
+                <div class="success">
+                    <h3>✨ Instalação Automática Completa!</h3>
+                    <p>Agora você pode instalar TUDO com apenas 1 clique!</p>
+                </div>
+
+                <div class="step">
+                    <h3><span class="badge new">NOVO</span> Passo Único</h3>
+                    <p>Clique com botão direito no arquivo:</p>
+                    <div class="command-box">CLIQUE-AQUI-PARA-INSTALAR.bat</div>
+                    <p>Selecione: <code>Executar como administrador</code></p>
+                    <p>Aguarde 10-15 minutos e pronto! ✅</p>
+                </div>
+
+                <div class="warning">
+                    <h3>⚠️ Importante</h3>
+                    <ul>
+                        <li>Execute SEMPRE como Administrador</li>
+                        <li>Tenha conexão com internet ativa</li>
+                        <li>Tenha pelo menos 2GB de espaço livre</li>
+                        <li>Aguarde pacientemente (não feche a janela)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- O QUE SERÁ INSTALADO -->
+            <div class="section">
+                <h2>📦 O Que Será Instalado</h2>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>🔧 Software Base</h3>
+                        <p>Chocolatey, Python 3.11, Node.js 20, Chrome, Git</p>
+                    </div>
+                    <div class="card">
+                        <h3>🐍 Python (Backend)</h3>
+                        <p>FastAPI, Uvicorn, Playwright, Pandas, BeautifulSoup</p>
+                    </div>
+                    <div class="card">
+                        <h3>⚛️ JavaScript (Frontend)</h3>
+                        <p>React, Vite, React Router, React DOM</p>
+                    </div>
+                    <div class="card">
+                        <h3>⚙️ Configurações</h3>
+                        <p>Virtual Env, Navegadores, Pastas, PATH</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMO INICIAR -->
+            <div class="section">
+                <h2>🎯 Como Iniciar o Projeto</h2>
+
+                <div class="step">
+                    <h3>Opção 1: Script Automático (Mais Fácil)</h3>
+                    <p>Duplo clique em:</p>
+                    <div class="command-box">INICIAR_TUDO.bat</div>
+                    <p>Isso vai abrir 3 janelas automaticamente:</p>
+                    <ul>
+                        <li>Chrome Debug (porta 9222)</li>
+                        <li>Backend Python/FastAPI (porta 8001)</li>
+                        <li>Frontend React/Vite (porta 5173)</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h3>Opção 2: Manual (3 Comandos)</h3>
+
+                    <p><strong>Terminal 1 - Chrome Debug:</strong></p>
+                    <div class="command-box">INICIAR_CHROME_DEBUG.bat</div>
+
+                    <p><strong>Terminal 2 - Backend:</strong></p>
+                    <div class="command-box">cd backend<br>venv\Scripts\activate<br>python main.py</div>
+
+                    <p><strong>Terminal 3 - Frontend:</strong></p>
+                    <div class="command-box">cd frontend<br>npm run dev</div>
+                </div>
+            </div>
+
+            <!-- ACESSANDO O SISTEMA -->
+            <div class="section">
+                <h2>🌐 Acessando o Sistema</h2>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Frontend</h3>
+                        <code>http://localhost:5173</code>
+                        <p>Interface do usuário (React)</p>
+                    </div>
+                    <div class="card">
+                        <h3>Backend API</h3>
+                        <code>http://localhost:8001</code>
+                        <p>API REST (FastAPI)</p>
+                    </div>
+                    <div class="card">
+                        <h3>Documentação</h3>
+                        <code>http://localhost:8001/docs</code>
+                        <p>Swagger UI Interativo</p>
+                    </div>
+                    <div class="card">
+                        <h3>Chrome Debug</h3>
+                        <code>porta 9222</code>
+                        <p>Chrome com debug habilitado</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WORKFLOW -->
+            <div class="section">
+                <h2>📋 Como Usar (Workflow)</h2>
+
+                <div class="step">
+                    <h3>Passo 1: Iniciar o Sistema</h3>
+                    <p>Execute: <code>INICIAR_TUDO.bat</code></p>
+                    <p>Aguarde as 3 janelas abrirem (Chrome, Backend, Frontend)</p>
+                </div>
+
+                <div class="step">
+                    <h3>Passo 2: Usar o Chrome Debug</h3>
+                    <p>No Chrome Debug (janela roxa):</p>
+                    <ul>
+                        <li>Abra novas abas (Ctrl + T)</li>
+                        <li>Cole URLs de produtos da Amazon</li>
+                        <li>Deixe as páginas carregarem completamente</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h3>Passo 3: Acessar o Sistema</h3>
+                    <p>No seu navegador normal, acesse:</p>
+                    <div class="command-box">http://localhost:5173/capture</div>
+                </div>
+
+                <div class="step">
+                    <h3>Passo 4: Capturar Produtos</h3>
+                    <p>Clique em <code>Capturar Abas</code></p>
+                    <p>Veja os produtos sendo extraídos automaticamente! ✨</p>
+                </div>
+            </div>
+
+            <!-- SOLUÇÃO DE PROBLEMAS -->
+            <div class="section">
+                <h2>🔧 Solução de Problemas Comuns</h2>
+
+                <div class="step">
+                    <h3>Erro: "Execute como Administrador"</h3>
+                    <p><strong>Solução:</strong></p>
+                    <ol style="list-style: decimal; padding-left: 20px;">
+                        <li>Clique com botão direito no arquivo .bat</li>
+                        <li>Selecione "Executar como administrador"</li>
+                        <li>Clique "Sim" na janela de permissões</li>
+                    </ol>
+                </div>
+
+                <div class="step">
+                    <h3>Erro: "Porta 9222 em uso"</h3>
+                    <p><strong>Solução:</strong></p>
+                    <div class="command-box">taskkill /F /IM chrome.exe<br>timeout /t 2<br>INICIAR_CHROME_DEBUG.bat</div>
+                </div>
+
+                <div class="step">
+                    <h3>Erro: "Python não encontrado"</h3>
+                    <p><strong>Solução:</strong></p>
+                    <ul>
+                        <li>Baixe Python: <a href="https://www.python.org/downloads/" target="_blank">python.org/downloads</a></li>
+                        <li>Durante instalação, marque "Add Python to PATH"</li>
+                        <li>Execute o instalador novamente</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h3>Erro: "Node não encontrado"</h3>
+                    <p><strong>Solução:</strong></p>
+                    <ul>
+                        <li>Baixe Node.js: <a href="https://nodejs.org/" target="_blank">nodejs.org</a></li>
+                        <li>Instale normalmente</li>
+                        <li>Execute o instalador novamente</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ARQUIVOS PRINCIPAIS -->
+            <div class="section">
+                <h2>📁 Arquivos Principais do Projeto</h2>
+
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #667eea; color: white;">
+                            <th style="padding: 12px; text-align: left;">Arquivo</th>
+                            <th style="padding: 12px; text-align: left;">Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px;"><code>CLIQUE-AQUI-PARA-INSTALAR.bat</code></td>
+                            <td style="padding: 10px;">⭐ Instalador principal (use este!)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><code>INSTALAR_E_INICIAR_COMPLETO.bat</code></td>
+                            <td style="padding: 10px;">Instalador completo detalhado</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px;"><code>Instalar-Completo.ps1</code></td>
+                            <td style="padding: 10px;">Instalador em PowerShell</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><code>INICIAR_TUDO.bat</code></td>
+                            <td style="padding: 10px;">Inicia todos os serviços</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px;"><code>INICIAR_CHROME_DEBUG.bat</code></td>
+                            <td style="padding: 10px;">Inicia apenas Chrome Debug</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><code>LEIA-ME_WINDOWS.md</code></td>
+                            <td style="padding: 10px;">Documentação completa</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 10px;"><code>requirements.txt</code></td>
+                            <td style="padding: 10px;">Dependências Python</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><code>frontend/package.json</code></td>
+                            <td style="padding: 10px;">Dependências Node.js</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- REQUISITOS -->
+            <div class="section">
+                <h2>💻 Requisitos do Sistema</h2>
+
+                <div class="grid">
+                    <div class="card">
+                        <h3>Sistema Operacional</h3>
+                        <p>Windows 10/11 (64-bit)</p>
+                    </div>
+                    <div class="card">
+                        <h3>Espaço em Disco</h3>
+                        <p>Mínimo 2GB livres</p>
+                    </div>
+                    <div class="card">
+                        <h3>Memória RAM</h3>
+                        <p>Mínimo 4GB (Recomendado 8GB)</p>
+                    </div>
+                    <div class="card">
+                        <h3>Internet</h3>
+                        <p>Necessária para instalação</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DICAS -->
+            <div class="section">
+                <h2>💡 Dicas Importantes</h2>
+
+                <div class="warning">
+                    <h3>⚠️ Atenção</h3>
+                    <ul>
+                        <li>Use APENAS o Chrome Debug para abrir produtos</li>
+                        <li>NÃO use seu Chrome normal - não funcionará</li>
+                        <li>Mantenha as 3 janelas abertas enquanto usar o sistema</li>
+                        <li>O Chrome Debug é identificado pela tela roxa</li>
+                    </ul>
+                </div>
+
+                <div class="success">
+                    <h3>✅ Boas Práticas</h3>
+                    <ul>
+                        <li>Sempre execute como Administrador</li>
+                        <li>Aguarde a instalação completa (10-15 min)</li>
+                        <li>Faça backup da pasta <code>backend/data</code></li>
+                        <li>Primeira execução demora mais (downloads)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>🎉 Pronto para Usar!</h3>
+            <p>Execute <strong>CLIQUE-AQUI-PARA-INSTALAR.bat</strong> como administrador</p>
+            <p style="margin-top: 10px; opacity: 0.7; font-size: 14px;">
+                FBA Automation - Instalação Automática para Windows
+            </p>
+        </div>
+    </div>
+</body>
+</html>

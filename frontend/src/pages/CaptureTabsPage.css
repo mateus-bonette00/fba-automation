@@ -308,6 +308,18 @@
   border-color: var(--accent);
 }
 
+.link-btn-all {
+  background: rgba(139, 92, 246, 0.2);
+  color: #8b5cf6;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  font-weight: 600;
+}
+
+.link-btn-all:hover {
+  background: rgba(139, 92, 246, 0.3);
+  border-color: #8b5cf6;
+}
+
 .link-btn.clicked {
   background: rgba(239, 68, 68, 0.2) !important;
   color: #ef4444 !important;

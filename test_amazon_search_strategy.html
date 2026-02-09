@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Estratégia de Busca Amazon</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .test-case {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #10b981;
+        }
+        .test-case h3 {
+            margin-top: 0;
+            color: #10b981;
+        }
+        .input {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .output {
+            background: rgba(16, 185, 129, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+            border-left: 3px solid #10b981;
+        }
+        .strategy {
+            color: #fbbf24;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .link:hover {
+            background: #059669;
+        }
+        .explanation {
+            background: rgba(251, 191, 36, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #fbbf24;
+        }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Estratégia Inteligente de Busca na Amazon</h1>
+
+        <div class="explanation">
+            <h3>📚 Como Funciona:</h3>
+            <p><strong>Estratégia 1 (Prioridade Máxima):</strong> Se tiver <code>Part Number/Item Number/SKU</code>, busca APENAS por ele (mais específico)</p>
+            <p><strong>Estratégia 2:</strong> Se tiver <code>Brand + Título</code>, junta os dois SEM separador |</p>
+            <p><strong>Estratégia 3 (Fallback):</strong> Usa apenas o título base, removendo metadados</p>
+        </div>
+
+        <div id="tests"></div>
+    </div>
+
+    <script>
+        /**
+         * Estratégia inteligente de busca na Amazon
+         * (Mesma função do CaptureTabsPage.jsx)
+         */
+        function buildAmazonSearchUrl(fullTitle) {
+            const parts = fullTitle.split('|').map(p => p.trim())
+
+            let partNumber = null
+            let brand = null
+            let baseTitle = parts[0]
+
+            for (const part of parts) {
+                const lowerPart = part.toLowerCase()
+
+                if (lowerPart.includes('part number:') ||
+                    lowerPart.includes('item number:') ||
+                    lowerPart.includes('sku:') ||
+                    lowerPart.includes('model number:')) {
+                    const code = part.split(':')[1]?.trim()
+                    if (code && code.length > 0) {
+                        partNumber = code
+                    }
+                }
+
+                if (lowerPart.includes('brand:') ||
+                    lowerPart.includes('manufacturer:') ||
+                    lowerPart.includes('john deere') ||
+                    lowerPart.includes('tomy') ||
+                    lowerPart.includes('ertl') ||
+                    lowerPart.includes('johnny lightning')) {
+                    const brandName = part.includes(':') ? part.split(':')[1]?.trim() : part
+                    if (brandName && brandName.length > 0) {
+                        brand = brandName
+                    }
+                }
+            }
+
+            // Estratégia 1: Part Number
+            if (partNumber) {
+                return {
+                    url: `https://www.amazon.com/s?k=${encodeURIComponent(partNumber)}`,
+                    query: partNumber,
+                    strategy: '⭐ Estratégia 1: Part Number (MAIS ESPECÍFICO)'
+                }
+            }
+
+            // Estratégia 2: Brand + Título
+            if (brand && baseTitle) {
+                const searchQuery = `${brand} ${baseTitle}`
+                return {
+                    url: `https://www.amazon.com/s?k=${encodeURIComponent(searchQuery)}`,
+                    query: searchQuery,
+                    strategy: '✅ Estratégia 2: Brand + Título'
+                }
+            }
+
+            // Estratégia 3: Título base
+            const cleanTitle = baseTitle
+                .replace(/\s*\|\s*/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+
+            return {
+                url: `https://www.amazon.com/s?k=${encodeURIComponent(cleanTitle)}`,
+                query: cleanTitle,
+                strategy: '📝 Estratégia 3: Título Base'
+            }
+        }
+
+        // Casos de teste
+        const testCases = [
+            {
+                name: 'Matchbox Porsche (seu exemplo)',
+                input: '2024 Porsche Taycan | Item Number:MB-2024-HVL75 | Matchbox | 1:64'
+            },
+            {
+                name: 'Produto com Item Number (Johnny Lightning)',
+                input: '1:64 1963 Pontiac Tempest | Item Number:JL-CG-06211 | Johnny Lightning'
+            },
+            {
+                name: 'Produto com Part Number (John Deere)',
+                input: '1/32 4240 Tractor | Part Number:LP84525 | John Deere'
+            },
+            {
+                name: 'Produto TOMY com SKU',
+                input: 'Collect N Play 1/32 Tractor With Loader | SKU:LP64770 | John Deere'
+            },
+            {
+                name: 'Hot Wheels sem escala',
+                input: 'Tesla Cybertruck | Item Number:HW-2024-001 | Hot Wheels'
+            },
+            {
+                name: 'Produto sem Brand',
+                input: 'Die Cast Tractor 1/32 Scale'
+            }
+        ]
+
+        // Renderizar testes
+        const testsContainer = document.getElementById('tests')
+
+        testCases.forEach((testCase, index) => {
+            const result = buildAmazonSearchUrl(testCase.input)
+
+            const testDiv = document.createElement('div')
+            testDiv.className = 'test-case'
+            testDiv.innerHTML = `
+                <h3>Teste ${index + 1}: ${testCase.name}</h3>
+
+                <div class="input">
+                    <strong>📥 Input (Título Completo):</strong><br>
+                    ${testCase.input}
+                </div>
+
+                <div class="strategy">
+                    ${result.strategy}
+                </div>
+
+                <div class="output">
+                    <strong>🔍 Query da Amazon:</strong><br>
+                    <code>${result.query}</code>
+                </div>
+
+                <a href="${result.url}" target="_blank" class="link">
+                    🛒 Testar na Amazon
+                </a>
+            `
+
+            testsContainer.appendChild(testDiv)
+        })
+    </script>
+</body>
+</html>
