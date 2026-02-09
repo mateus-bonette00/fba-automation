@@ -47,8 +47,8 @@ echo [OK] Permissoes verificadas! Iniciando instalacao...
 echo.
 timeout /t 2 /nobreak >nul
 
-REM Executar instalador completo
-call "%~dp0INSTALAR_E_INICIAR_COMPLETO.bat"
+REM Executar instalador correto (sem instalacao do Git)
+call "%~dp0SCRIPT-CORRETO.bat"
 
 echo.
 echo Instalacao finalizada!
