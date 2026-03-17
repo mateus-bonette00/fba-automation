@@ -302,6 +302,14 @@ start_chrome_debug() {
   disown "$!" 2>/dev/null || true
 }
 
+open_frontend_in_chrome() {
+  nohup env DISPLAY=:0 XAUTHORITY="$HOME/.Xauthority" "$CHROME_BIN" \
+    --new-window \
+    http://localhost:5173 \
+    >/dev/null 2>&1 &
+  disown "$!" 2>/dev/null || true
+}
+
 start_chrome_watchdog() {
   if [ -n "$CHROME_WATCHDOG_PID" ] && kill -0 "$CHROME_WATCHDOG_PID" >/dev/null 2>&1; then
     return 0
@@ -542,7 +550,8 @@ else
     tail -n 80 "$FRONTEND_LOG" || true
     exit 1
   fi
-  echo -e "${GREEN}✅ Frontend ativo em http://127.0.0.1:5173${NC}"
+echo -e "${GREEN}✅ Frontend ativo em http://127.0.0.1:5173${NC}"
+open_frontend_in_chrome
 fi
 echo ""
 
