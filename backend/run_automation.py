@@ -242,13 +242,13 @@ async def open_tabs_in_parallel(ctx, urls, timeout_ms, max_parallel, delay_secon
     return await asyncio.gather(*[_open(url) for url in urls])
 
 
-def flush_accumulated_export(state, export_dir, template_path, person, reason):
+def flush_accumulated_export(state, export_dir, template_path, reason):
     items = state.get("accumulated_items", [])
     if not items:
         return None
 
     ts = datetime.now()
-    base_name = f"Produtos_{person}_{ts.strftime('%d_%m_%Y')}_{ts.strftime('%H%M%S')}.xlsx"
+    base_name = f"Produtos_{ts.strftime('%d_%m_%Y')}_{ts.strftime('%H%M%S')}.xlsx"
     out_path = os.path.join(export_dir, base_name)
     export_to_xlsx(items, template_path, out_path)
     logger.info(f"Exportação ({reason}) concluída em: {out_path}")
@@ -307,7 +307,6 @@ async def run_automation(
     headless,
     start_index=None,
     end_index=None,
-    person="Mateus",
 ):
     if price_min < 0:
         logger.warning(f"price_min inválido ({price_min}). Ajustando para 0.")
@@ -338,7 +337,6 @@ async def run_automation(
         export_threshold=export_threshold,
         requested_start_index=start_index,
         requested_end_index=end_index,
-        person=person,
     )
     
     while True:
@@ -392,7 +390,7 @@ async def run_automation(
         
         # Criação da pasta de exportação e refencia do template globais
         template_path = os.path.join(BASE_DIR, "SRAM 05_01_2026.xlsx")
-        export_dir = os.path.join(BASE_DIR, "exports", "ARQUIVOS XLSX", person)
+        export_dir = os.path.join(BASE_DIR, "exports", "ARQUIVOS XLSX")
         os.makedirs(export_dir, exist_ok=True)
 
         # 1. Obter fornecedor se não houver no estado
@@ -461,7 +459,7 @@ async def run_automation(
                 logger.info("Automação concluída!")
                 write_diagnostic("automation_completed_no_pending_suppliers")
 
-                flush_accumulated_export(state, export_dir, template_path, person, "lote final")
+                flush_accumulated_export(state, export_dir, template_path,"lote final")
                 break
             supplier_idx_int = parse_supplier_index(supplier.get("indice"))
             if end_idx_int is not None and supplier_idx_int is not None and supplier_idx_int > end_idx_int:
@@ -473,7 +471,7 @@ async def run_automation(
                     end_index=end_idx_int,
                     next_supplier_index=supplier.get("indice"),
                 )
-                flush_accumulated_export(state, export_dir, template_path, person, "lote final")
+                flush_accumulated_export(state, export_dir, template_path,"lote final")
                 break
 
             logger.info(f"Iniciando Fornecedor Indice {supplier['indice']} -> {supplier['url']}")
@@ -497,7 +495,7 @@ async def run_automation(
                     end_index=end_idx_int,
                     current_supplier_index=supplier.get("indice"),
                 )
-                flush_accumulated_export(state, export_dir, template_path, person, "lote final")
+                flush_accumulated_export(state, export_dir, template_path,"lote final")
                 break
             logger.info(f"Retomando automação Fornecedor indice: {supplier['indice']}")
             write_diagnostic(
@@ -660,11 +658,20 @@ async def run_automation(
                         processed_links.add(item["url"])
                         continue
                         
-                    # Ignorar links inválidos (ex: javascript:void(0);, #, mailto:)
                     if not url_lower.startswith("http"):
                         logger.info(f"Link ignorado (formato inválido): {item['url']}")
                         continue
-                        
+
+                    action_patterns = [
+                        "cart.php?action=", "/cart/add", "add-to-cart",
+                        "addtocart", "/wishlist/", "/checkout",
+                        "action=add&product_id=",
+                    ]
+                    if any(p in url_lower for p in action_patterns):
+                        logger.info(f"Link ignorado (URL de ação/carrinho): {item['url']}")
+                        processed_links.add(item["url"])
+                        continue
+
                     # Ignorar marcas na blacklist
                     if any(b in url_lower for b in blacklist):
                         logger.info(f"Produto ignorado (Blacklist: {blacklist}): {item['url']}")
@@ -1067,7 +1074,6 @@ async def run_automation(
                                 state=state,
                                 export_dir=export_dir,
                                 template_path=template_path,
-                                person=person,
                                 reason=f"threshold {export_threshold}",
                             )
 
@@ -1154,7 +1160,6 @@ if __name__ == "__main__":
     parser.add_argument("--start-index", default="36", help="Inicia a partir do indice exato")
     parser.add_argument("--end-index", default="", help="Finaliza no indice informado (inclusive)")
     parser.add_argument("--headless", action="store_true", help="Rodar browser interno via playrigtht puro (Requer auth externa)")
-    parser.add_argument("--person", default="Mateus", help="Nome da pessoa para a tabela (Mateus ou Daniel)")
 
     args = parser.parse_args()
     
@@ -1171,7 +1176,6 @@ if __name__ == "__main__":
                     args.headless,
                     args.start_index,
                     args.end_index,
-                    args.person,
                 )
             )
             break # Terminou com sucesso ou via break interno

@@ -1,0 +1,173 @@
+{
+  "start_index": "2",
+  "current_supplier_row": {
+    "indice": "2",
+    "url": "http://us.tomy.com/brands/ertl/"
+  },
+  "current_page_url": "https://us.tomy.com/brands/ertl/?page=2",
+  "processed_links": [
+    "https://us.tomy.com/cart.php?action=add&product_id=4259",
+    "https://us.tomy.com/cart.php?action=add&product_id=4299",
+    "https://us.tomy.com/allis-chalmers-d-19-diesel-tractor-1-16-scale-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-64-scale-320g-skid-steer-die-cast-metal-replica/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4450",
+    "https://us.tomy.com/cart.php?action=add&product_id=4301",
+    "https://us.tomy.com/ford-861-powermaster-tractor-1-16-scale-die-cast-metal-replica-ertl-prestige-collection/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4396",
+    "https://us.tomy.com/john-deere-1-64-scale-7r-270-tractor-with-c500-mower-die-cast-metal-replica/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4398",
+    "https://us.tomy.com/john-deere-1-16-scale-x384-lawn-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/new-holland-1-16-scale-workmaster-120-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-16-scale-3020-tractor-with-celebration-graphics-die-cast-metal-replica/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4300",
+    "https://us.tomy.com/john-deere-1-16-scale-561r-round-baler-with-bale-die-cast-metal-replica/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4297",
+    "https://us.tomy.com/farmall-1-16-scale-656-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-64-scale-w260-windrower-die-cast-metal-replica/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4397",
+    "https://us.tomy.com/cart.php?action=add&product_id=4263",
+    "https://us.tomy.com/john-deere-1-64-scale-9rx-590-tractor-with-scrapers-die-cast-metal-replica/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4296",
+    "https://us.tomy.com/john-deere-1-32-scale-8760-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/fendt-826-vario-tractor-1-32-scale-die-cast-metal-replica-ertl-prestige-collection/",
+    "https://us.tomy.com/massey-ferguson-1155-tractor-with-spirit-of-america-graphics-1-64-scale-die-cast-metal-replica/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4261",
+    "https://us.tomy.com/cart.php?action=add&product_id=4264",
+    "https://us.tomy.com/cart.php?action=add&product_id=4302",
+    "https://us.tomy.com/cart.php?action=add&product_id=4395",
+    "https://us.tomy.com/new-holland-1-64-scale-t9-580-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/allis-chalmers-d-17-series-2-tractor-1-16-scale-die-cast-metal-replica-ertl-prestige-collection/",
+    "https://us.tomy.com/cart.php?action=add&product_id=4258",
+    "https://us.tomy.com/john-deere-1-64-scale-561r-round-baler-with-bale-die-cast-metal-replica/"
+  ],
+  "accumulated_items": [
+    {
+      "product_title": "Allis-Chalmers D-17 \"Series 2\" Tractor – 1:16 Scale – Die-Cast Metal Replica – ERTL Prestige Collection",
+      "upc": "00036881165200",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/allis-chalmers-d-17-series-2-tractor-1-16-scale-die-cast-metal-replica-ertl-prestige-collection/"
+    },
+    {
+      "product_title": "Allis-Chalmers D-19 Diesel Tractor – 1:16 Scale – Die-Cast Metal Replica",
+      "upc": "00036881165194",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/allis-chalmers-d-19-diesel-tractor-1-16-scale-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "Fendt 826 Vario Tractor – 1:32 Scale – Die-Cast Metal Replica – ERTL Prestige Collection",
+      "upc": "00036881600091",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/fendt-826-vario-tractor-1-32-scale-die-cast-metal-replica-ertl-prestige-collection/"
+    },
+    {
+      "product_title": "Ford 861 Powermaster Tractor – 1:16 Scale – Die-Cast Metal Replica – ERTL Prestige Collection",
+      "upc": "00036881610434",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/ford-861-powermaster-tractor-1-16-scale-die-cast-metal-replica-ertl-prestige-collection/"
+    },
+    {
+      "product_title": "Massey Ferguson 1155 Tractor with Spirit of America Graphics – 1:64 Scale – Die-Cast Metal Replica",
+      "upc": "00036881476603",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/massey-ferguson-1155-tractor-with-spirit-of-america-graphics-1-64-scale-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:16 Scale 3020 Tractor with Celebration Graphics – Die-Cast Metal Replica",
+      "upc": "00036881459118",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-16-scale-3020-tractor-with-celebration-graphics-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:16 Scale 561R Round Baler with Bale – Die-Cast Metal Replica",
+      "upc": "00036881459002",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-16-scale-561r-round-baler-with-bale-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:16 Scale X384 Lawn Tractor – Die-Cast Metal Replica",
+      "upc": "00036881459385",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-16-scale-x384-lawn-tractor-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:32 Scale 8760 Tractor – Die-Cast Metal Replica",
+      "upc": "00036881459200",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-32-scale-8760-tractor-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "New Holland 1:16 Scale Workmaster 120 Tractor – Die-Cast Metal Replica",
+      "upc": "00036881610137",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/new-holland-1-16-scale-workmaster-120-tractor-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "Farmall 1:16 Scale 656 Tractor – Die-Cast Metal Replica",
+      "upc": "00036881443605",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/farmall-1-16-scale-656-tractor-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:64 Scale 561R Round Baler with Bale – Die-Cast Metal Replica",
+      "upc": "00036881459026",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-64-scale-561r-round-baler-with-bale-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:64 Scale 320G Skid Steer – Die-Cast Metal Replica",
+      "upc": "00036881458883",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-64-scale-320g-skid-steer-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:64 Scale 7R 270 Tractor with C500 Mower – Die-Cast Metal Replica",
+      "upc": "00036881458890",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-64-scale-7r-270-tractor-with-c500-mower-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:64 Scale 9RX 590 Tractor with Scrapers – Die-Cast Metal Replica",
+      "upc": "00036881459064",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-64-scale-9rx-590-tractor-with-scrapers-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "John Deere 1:64 Scale W260 Windrower – Die-Cast Metal Replica",
+      "upc": "00036881458906",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/john-deere-1-64-scale-w260-windrower-die-cast-metal-replica/"
+    },
+    {
+      "product_title": "New Holland 1:64 Scale T9.580 Tractor – Die-Cast Metal Replica",
+      "upc": "00036881610113",
+      "upc_method": "advanced:json-ld",
+      "url": "https://us.tomy.com/new-holland-1-64-scale-t9-580-tractor-die-cast-metal-replica/"
+    }
+  ],
+  "total_captured_for_supplier": 17,
+  "processed_suppliers_indices": [],
+  "deferred_suppliers_indices": [],
+  "global_captured_urls": [
+    "https://us.tomy.com/allis-chalmers-d-17-series-2-tractor-1-16-scale-die-cast-metal-replica-ertl-prestige-collection/",
+    "https://us.tomy.com/allis-chalmers-d-19-diesel-tractor-1-16-scale-die-cast-metal-replica/",
+    "https://us.tomy.com/fendt-826-vario-tractor-1-32-scale-die-cast-metal-replica-ertl-prestige-collection/",
+    "https://us.tomy.com/ford-861-powermaster-tractor-1-16-scale-die-cast-metal-replica-ertl-prestige-collection/",
+    "https://us.tomy.com/massey-ferguson-1155-tractor-with-spirit-of-america-graphics-1-64-scale-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-16-scale-3020-tractor-with-celebration-graphics-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-16-scale-561r-round-baler-with-bale-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-16-scale-x384-lawn-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-32-scale-8760-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/new-holland-1-16-scale-workmaster-120-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/farmall-1-16-scale-656-tractor-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-64-scale-561r-round-baler-with-bale-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-64-scale-320g-skid-steer-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-64-scale-7r-270-tractor-with-c500-mower-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-64-scale-9rx-590-tractor-with-scrapers-die-cast-metal-replica/",
+    "https://us.tomy.com/john-deere-1-64-scale-w260-windrower-die-cast-metal-replica/",
+    "https://us.tomy.com/new-holland-1-64-scale-t9-580-tractor-die-cast-metal-replica/"
+  ],
+  "link_fail_counts": {},
+  "domain_fail_counts": {},
+  "quarantined_links": {},
+  "quarantined_domains": {}
+}

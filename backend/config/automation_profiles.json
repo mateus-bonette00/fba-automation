@@ -10,7 +10,7 @@
         "price_min": 0,
         "export_threshold": 500,
         "start_index": "36",
-        "person": "Mateus",
+
         "resume": true
       }
     },
@@ -24,7 +24,7 @@
         "price_min": 10,
         "export_threshold": 300,
         "start_index": "36",
-        "person": "Mateus",
+
         "resume": true
       }
     },
@@ -38,7 +38,7 @@
         "price_min": 60,
         "export_threshold": 250,
         "start_index": "36",
-        "person": "Mateus",
+
         "resume": true
       }
     },
@@ -52,7 +52,7 @@
         "price_min": 0,
         "export_threshold": 500,
         "start_index": "36",
-        "person": "Mateus",
+
         "resume": true
       },
       "vpn_up": "nmcli connection up id 'usa-newyork-udp'",

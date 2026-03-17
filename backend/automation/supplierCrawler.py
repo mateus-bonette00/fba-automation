@@ -66,48 +66,83 @@ async def fetch_product_links_from_page(page) -> List[Dict]:
     js_extract = """
     () => {
         const results = [];
-        // Classes comuns de cards
         const selectors = [
-            '.product-item a', '.product-card a', 'li.item a', 
+            '.product-item a', '.product-card a', 'li.item a',
             '.grid-item a', '.product a', 'article a', 'a.product-link'
         ];
-        
+
         const outOfStockTexts = ['sold out', 'out of stock', 'esgotado', 'indisponível'];
-        
+
         function isOutOfStock(element) {
             const text = (element.innerText || "").toLowerCase();
             return outOfStockTexts.some(oos => text.includes(oos));
         }
-        
+
+        function isActionUrl(href) {
+            if (!href) return false;
+            const lower = href.toLowerCase();
+            return lower.includes('cart.php?action=')
+                || lower.includes('/cart/add')
+                || lower.includes('add-to-cart')
+                || lower.includes('addtocart')
+                || lower.includes('/wishlist/')
+                || lower.includes('action=add')
+                || lower.includes('/checkout')
+                || lower.includes('login')
+                || lower.includes('account')
+                || lower.match(/^(mailto:|tel:|javascript:)/);
+        }
+
+        function extractPrice(card) {
+            if (!card) return "";
+            const priceSelectors = [
+                '.price .price--withoutTax',
+                '.price-section .price--withoutTax',
+                '[data-product-price-without-tax]',
+                '.price--main',
+                '.price--withoutTax',
+                '.price .amount',
+                '.price-value',
+                '.current-price',
+                '.sale-price',
+                '.regular-price',
+                '.price, [class*="price"], .amount'
+            ];
+            for (const sel of priceSelectors) {
+                const el = card.querySelector(sel);
+                if (el) {
+                    const txt = (el.innerText || el.textContent || "").trim();
+                    if (txt && /\d/.test(txt)) return txt;
+                }
+            }
+            const allPriceEls = card.querySelectorAll('.price, [class*="price"], .amount');
+            for (const el of allPriceEls) {
+                const txt = (el.innerText || el.textContent || "").trim();
+                if (txt && /\$[\d.,]+/.test(txt)) return txt;
+            }
+            return "";
+        }
+
         for (const sel of selectors) {
             document.querySelectorAll(sel).forEach(el => {
-                if (el.href && !results.find(x => x.url === el.href)) {
-                    
-                    const card = el.closest('.product-item, .product-card, li.item, .grid-item, .product, article');
-                    
-                    // Se o card disser "Sold Out", ignora o produto inteiro
-                    if (card && isOutOfStock(card)) {
-                        return; // Pula essa iteracao
-                    }
-                    
-                    // Tenta achar o preço próximo
-                    let priceText = "";
-                    if(card) {
-                        const pEl = card.querySelector('.price, [class*="price"], .amount');
-                        if(pEl) priceText = pEl.innerText;
-                    }
-                    results.push({url: el.href, price_text: priceText});
-                }
+                if (!el.href || isActionUrl(el.href)) return;
+                if (results.find(x => x.url === el.href)) return;
+
+                const card = el.closest('.product-item, .product-card, li.item, .grid-item, .product, article');
+
+                if (card && isOutOfStock(card)) return;
+
+                const priceText = extractPrice(card);
+                results.push({url: el.href, price_text: priceText});
             });
             if (results.length > 0) break;
         }
-        
-        // Fallback genérico se nada achou
+
         if(results.length === 0) {
            document.querySelectorAll('a[href]').forEach(el => {
+                if (isActionUrl(el.href)) return;
                 const href = el.href.toLowerCase();
                 if(href.includes('/product/') || href.includes('/p/') || href.includes('/item/')) {
-                    // Verifica se o texto do proprio link/container indica fora de estoque
                     const container = el.parentElement || el;
                     if (!isOutOfStock(container)) {
                         results.push({url: el.href, price_text: ""});

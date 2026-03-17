@@ -13,7 +13,7 @@ const AutomationUI = () => {
     price_limit: 85,
     export_threshold: 500,
     start_index: "36",
-    person: "Mateus",
+    end_index: "",
   });
 
   const logsEndRef = useRef(null);
@@ -180,17 +180,16 @@ const AutomationUI = () => {
               />
             </div>
             <div className="input-group">
-              <label>Para Quem essa Tabela?</label>
-              <select
-                value={config.person}
+              <label>Índice Final (Opcional)</label>
+              <input
+                type="text"
+                placeholder="Ex: 50"
+                value={config.end_index}
                 onChange={(e) =>
-                  setConfig({ ...config, person: e.target.value })
+                  setConfig({ ...config, end_index: e.target.value })
                 }
                 disabled={isRunning}
-              >
-                <option value="Mateus">Mateus</option>
-                <option value="Daniel">Daniel</option>
-              </select>
+              />
             </div>
             
             <div className="input-group">

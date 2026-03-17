@@ -38,7 +38,6 @@ DEFAULT_START_PARAMS: Dict[str, Any] = {
     "export_threshold": 500,
     "start_index": "36",
     "end_index": "",
-    "person": "Mateus",
     "resume": False,
 }
 
@@ -245,7 +244,6 @@ def _normalize_start_params(raw: Dict[str, Any]) -> Dict[str, Any]:
         params["export_threshold"] = int(params.get("export_threshold"))
         params["start_index"] = str(params.get("start_index") or "").strip()
         params["end_index"] = str(params.get("end_index") or "").strip()
-        params["person"] = str(params.get("person") or "Mateus").strip() or "Mateus"
         params["resume"] = _to_bool(params.get("resume", False))
     except (TypeError, ValueError) as e:
         raise HTTPException(status_code=400, detail=f"Parâmetros inválidos: {e}")
@@ -295,8 +293,6 @@ def _build_run_command(params: Dict[str, Any]) -> list[str]:
         str(params["price_min"]),
         "--export-threshold",
         str(params["export_threshold"]),
-        "--person",
-        str(params["person"]),
     ]
 
     if params["start_index"]:
@@ -902,7 +898,6 @@ async def start_automation(
     export_threshold: int = 500,
     start_index: str = "36",
     end_index: str = "",
-    person: str = "Mateus",
     resume: bool = False,
 ):
     params = _normalize_start_params(
@@ -914,7 +909,6 @@ async def start_automation(
             "export_threshold": export_threshold,
             "start_index": start_index,
             "end_index": end_index,
-            "person": person,
             "resume": resume,
         }
     )
@@ -928,7 +922,6 @@ async def start_automation_profile(
     devtools_url: Optional[str] = None,
     start_index: Optional[str] = None,
     end_index: Optional[str] = None,
-    person: Optional[str] = None,
 ):
     profiles = _load_profiles()
     if profile_name not in profiles:
@@ -945,8 +938,6 @@ async def start_automation_profile(
         raw_params["start_index"] = start_index
     if end_index is not None:
         raw_params["end_index"] = end_index
-    if person is not None:
-        raw_params["person"] = person
     raw_params["resume"] = resume
 
     params = _normalize_start_params(raw_params)
