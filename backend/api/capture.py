@@ -5,6 +5,11 @@ import asyncio, re, json, gc, os, httpx, unicodedata
 from urllib.parse import urlparse, urljoin, parse_qs
 from .upc_extractor import UPCExtractor
 from .title_extractor import TitleExtractor
+from .services.extraction_service import (
+    extract_page_fast as shared_extract_page_fast,
+    normalize_upc as shared_normalize_upc,
+    same_domain_probe as shared_same_domain_probe,
+)
 
 router = APIRouter()
 
@@ -635,7 +640,7 @@ async def capture_tabs(
                             except Exception:
                                 pass
 
-                        data = await _extract_page_fast(p, per_page_timeout_ms)
+                        data = await shared_extract_page_fast(p, per_page_timeout_ms)
                         raw = data.pop("_raw", {})
 
                         # 1) cache (com proteção de concorrência)
@@ -645,16 +650,16 @@ async def capture_tabs(
                                 if ck in local_cache:
                                     cached = local_cache.get(ck)
                                     # Só usa cache se o UPC for válido (não começar com muitos zeros)
-                                    if (cached and _normalize_upc(cached) and
+                                    if (cached and shared_normalize_upc(cached) and
                                         not cached.startswith("00000000") and
                                         cached not in ["000000000044", "00000000", "0000000000"]):
-                                        data["upc"] = _normalize_upc(cached) or ""
+                                        data["upc"] = shared_normalize_upc(cached) or ""
                                         data["upc_method"] = data.get("upc_method") or "cache"
 
                         # 2) probe de mesmo domínio-base
                         if same_domain_probe and not data.get("upc"):
                             try:
-                                pr = await _same_domain_probe(
+                                pr = await shared_same_domain_probe(
                                     url, p, raw,
                                     timeout_ms=3500,
                                     max_urls=12 if aggressive_probe else 8,

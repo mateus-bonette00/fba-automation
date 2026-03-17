@@ -1,0 +1,63 @@
+{
+  "profiles": [
+    {
+      "name": "default-us",
+      "description": "Fluxo padrão US: faixa 0-85, lote 10, indice 36.",
+      "params": {
+        "devtools_url": "http://127.0.0.1:9222",
+        "batch_size": 10,
+        "price_limit": 85,
+        "price_min": 0,
+        "export_threshold": 500,
+        "start_index": "36",
+        "person": "Mateus",
+        "resume": true
+      }
+    },
+    {
+      "name": "clearance-fast",
+      "description": "Faixa enxuta para clearance: 10-60 com lote menor.",
+      "params": {
+        "devtools_url": "http://127.0.0.1:9222",
+        "batch_size": 8,
+        "price_limit": 60,
+        "price_min": 10,
+        "export_threshold": 300,
+        "start_index": "36",
+        "person": "Mateus",
+        "resume": true
+      }
+    },
+    {
+      "name": "premium-scan",
+      "description": "Busca ticket maior: faixa 60-150.",
+      "params": {
+        "devtools_url": "http://127.0.0.1:9222",
+        "batch_size": 6,
+        "price_limit": 150,
+        "price_min": 60,
+        "export_threshold": 250,
+        "start_index": "36",
+        "person": "Mateus",
+        "resume": true
+      }
+    },
+    {
+      "name": "varrer-fornecedores",
+      "description": "Varre todos os fornecedores da planilha com VPN US automatica.",
+      "params": {
+        "devtools_url": "http://127.0.0.1:9222",
+        "batch_size": 10,
+        "price_limit": 85,
+        "price_min": 0,
+        "export_threshold": 500,
+        "start_index": "36",
+        "person": "Mateus",
+        "resume": true
+      },
+      "vpn_up": "nmcli connection up id 'usa-newyork-udp'",
+      "vpn_down": "nmcli connection down id 'usa-newyork-udp'",
+      "vpn_verify_country": "US"
+    }
+  ]
+}

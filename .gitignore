@@ -134,6 +134,7 @@ upc_cache.json
 *.xls
 dados/
 exports/
+backend/state/automation_jobs/*.json
 produtos_*.csv
 
 # Uploads

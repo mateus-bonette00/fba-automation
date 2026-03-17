@@ -8,6 +8,7 @@ from api.sellers import router as sellers_router
 from api.products import router as products_router
 from api.capture import router as capture_router
 from api.supplier_scraper_v2 import router as supplier_router
+from api.automation import router as automation_router, stop_automation_on_shutdown
 
 app = FastAPI(title="Automação FBA", version="1.0.0")
 
@@ -25,6 +26,12 @@ app.include_router(sellers_router, prefix="/api/sellers", tags=["Sellers"])
 app.include_router(products_router, prefix="/api/products", tags=["Products"])
 app.include_router(capture_router, prefix="/api/capture", tags=["Capture"])
 app.include_router(supplier_router, prefix="/api/supplier", tags=["Supplier"])
+app.include_router(automation_router, prefix="/api/automation", tags=["Automation"])
+
+@app.on_event("shutdown")
+async def shutdown_cleanup():
+    # Evita run_automation.py órfão se o backend cair/for interrompido.
+    await stop_automation_on_shutdown()
 
 @app.get("/api/health")
 async def health():
