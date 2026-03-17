@@ -33,7 +33,6 @@ CHROME_WATCHDOG_PID=""
 KEEP_CHROME_DEBUG_ON_EXIT="${KEEP_CHROME_DEBUG_ON_EXIT:-0}"
 CLEANUP_DONE="0"
 CHROME_USER_DATA_DIR="${CHROME_USER_DATA_DIR:-$HOME/.config/google-chrome-debug-profile}"
-CHROME_PROFILE_NAME="${CHROME_PROFILE_NAME:-Default}"
 AUTOMATION_AUTO_START="${AUTOMATION_AUTO_START:-0}"
 AUTOMATION_DEVTOOLS_URL="${AUTOMATION_DEVTOOLS_URL:-http://127.0.0.1:9222}"
 AUTOMATION_BATCH_SIZE="${AUTOMATION_BATCH_SIZE:-10}"
@@ -250,7 +249,7 @@ resolve_chrome_paths() {
     exit 1
   fi
 
-  mkdir -p "$CHROME_USER_DATA_DIR/$CHROME_PROFILE_NAME"
+  mkdir -p "$CHROME_USER_DATA_DIR"
 }
 
 endpoint_reports_chrome() {
@@ -282,11 +281,11 @@ kill_chrome_debug_9222() {
 }
 
 start_chrome_debug() {
-  nohup "$CHROME_BIN" \
+  nohup env DISPLAY=:0 XAUTHORITY="$HOME/.Xauthority" "$CHROME_BIN" \
     --new-window \
+    --remote-debugging-address=127.0.0.1 \
     --remote-debugging-port=9222 \
     --user-data-dir="$CHROME_USER_DATA_DIR" \
-    --profile-directory="$CHROME_PROFILE_NAME" \
     --disable-blink-features=AutomationControlled \
     --disable-background-networking \
     --disable-background-timer-throttling \
@@ -298,6 +297,7 @@ start_chrome_debug() {
     --no-default-browser-check \
     --no-first-run \
     --password-store=basic \
+    about:blank \
     >>"$CHROME_DEBUG_LOG" 2>&1 &
   disown "$!" 2>/dev/null || true
 }
@@ -426,7 +426,7 @@ resolve_chrome_paths
 
 echo -e "${BLUE}1️⃣  CHROME DEBUG${NC}"
 echo -e "${BLUE}   Binário:         ${CHROME_BIN}${NC}"
-echo -e "${BLUE}   Perfil automação: ${CHROME_USER_DATA_DIR}/${CHROME_PROFILE_NAME}${NC}"
+echo -e "${BLUE}   Perfil automação: ${CHROME_USER_DATA_DIR}${NC}"
 echo -e "${BLUE}   Log Chrome Debug: ${CHROME_DEBUG_LOG}${NC}"
 kill_chrome_debug_9222
 if wait_http "http://127.0.0.1:9222/json/version" 2 && endpoint_reports_chrome; then
