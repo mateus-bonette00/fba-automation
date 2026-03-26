@@ -636,43 +636,47 @@ async def run_automation(
                 links = await fetch_product_links_from_page(main_page)
                 logger.info(f"Página extratida: {len(links)} links encontrados")
 
-                # Filtra links 
+                # Filtra links
                 valid_links = []
                 blacklist = ["milwaukee"]
                 global_history = set(state.get("global_captured_urls", []))
                 priced_items_count = 0
                 above_price_count = 0
                 below_price_count = 0
-                
+                zero_price_count = 0
+                zero_price_urls = []
+
+                candidate_links = []
+
                 for item in links:
                     url_lower = item["url"].lower()
                     clean_url = clean_product_url(item["url"])
-                    
+
                     if item["url"] in processed_links:
                         continue
-                        
-                    # Filtragem Global: Se o produto já foi capturado para sempre em qualquer momento da história do App
+
                     if clean_url in global_history:
                         logger.info(f"Produto ignorado (Já foi capturado anteriormente na história): {clean_url}")
-                        # Adiciona no processed dessa pagina tbm p/ evitar rechecks inuteis
                         processed_links.add(item["url"])
                         continue
-                        
+
                     if not url_lower.startswith("http"):
                         logger.info(f"Link ignorado (formato inválido): {item['url']}")
                         continue
 
                     action_patterns = [
-                        "cart.php?action=", "/cart/add", "add-to-cart",
+                        "cart.php?action=", "cart.php?action%3d",
+                        "/cart/add", "/cart/", "add-to-cart",
                         "addtocart", "/wishlist/", "/checkout",
-                        "action=add&product_id=",
+                        "action=add&product_id=", "action=add&",
+                        "/compare/", "compare.php",
+                        "login", "account", "register",
                     ]
                     if any(p in url_lower for p in action_patterns):
                         logger.info(f"Link ignorado (URL de ação/carrinho): {item['url']}")
                         processed_links.add(item["url"])
                         continue
 
-                    # Ignorar marcas na blacklist
                     if any(b in url_lower for b in blacklist):
                         logger.info(f"Produto ignorado (Blacklist: {blacklist}): {item['url']}")
                         continue
@@ -690,7 +694,10 @@ async def run_automation(
                             domain=q_domain,
                         )
                         continue
-                        
+
+                    candidate_links.append(item)
+
+                for item in candidate_links:
                     price_info = parse_price_details(item.get("price_text", ""))
                     price = price_info.get("value")
                     price_status = price_info.get("status")
@@ -700,6 +707,36 @@ async def run_automation(
                         priced_items_count += 1
 
                     if price_status == "zero":
+                        zero_price_count += 1
+                        zero_price_urls.append(item["url"])
+
+                all_prices_are_zero = (
+                    zero_price_count > 0
+                    and priced_items_count > 0
+                    and zero_price_count == priced_items_count
+                )
+
+                if all_prices_are_zero:
+                    logger.warning(
+                        f"⚠️ TODOS os {zero_price_count} produtos com preço na listagem mostraram $0.00! "
+                        "Provável problema de VPN/geolocalização. "
+                        "Abrindo produtos mesmo assim para tentar capturar preço real na página do produto."
+                    )
+                    write_diagnostic(
+                        "all_prices_zero_vpn_suspected",
+                        supplier_index=supplier.get("indice"),
+                        page_url=current_url,
+                        total_candidates=len(candidate_links),
+                        zero_price_count=zero_price_count,
+                    )
+
+                for item in candidate_links:
+                    price_info = parse_price_details(item.get("price_text", ""))
+                    price = price_info.get("value")
+                    price_status = price_info.get("status")
+                    raw_price = price_info.get("raw", "")
+
+                    if price_status == "zero" and not all_prices_are_zero:
                         logger.info(
                             f"Ignorando produto com preço zero (raw='{raw_price}') -> {item['url']}"
                         )
@@ -739,16 +776,16 @@ async def run_automation(
                             parse_status=price_status,
                         )
 
-                    if price is not None and price_min > 0 and price < price_min:
+                    if price is not None and price_status != "zero" and price_min > 0 and price < price_min:
                         below_price_count += 1
                         logger.info(f"Ignorando produto < ${price_min} (preço lido: ${price}) -> {item['url']}")
                         continue
 
-                    if price is not None and price_limit > 0 and price > price_limit:
+                    if price is not None and price_status != "zero" and price_limit > 0 and price > price_limit:
                         above_price_count += 1
                         logger.info(f"Ignorando produto > ${price_limit} (preço lido: ${price}) -> {item['url']}")
                         continue
-                        
+
                     valid_links.append(item["url"])
                     
                 if len(valid_links) == 0:

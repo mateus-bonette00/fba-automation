@@ -82,14 +82,19 @@ async def fetch_product_links_from_page(page) -> List[Dict]:
             if (!href) return false;
             const lower = href.toLowerCase();
             return lower.includes('cart.php?action=')
+                || lower.includes('cart.php?action%3d')
                 || lower.includes('/cart/add')
+                || lower.includes('/cart/')
                 || lower.includes('add-to-cart')
                 || lower.includes('addtocart')
                 || lower.includes('/wishlist/')
-                || lower.includes('action=add')
+                || lower.includes('action=add&')
                 || lower.includes('/checkout')
+                || lower.includes('/compare')
+                || lower.includes('compare.php')
                 || lower.includes('login')
                 || lower.includes('account')
+                || lower.includes('register')
                 || lower.match(/^(mailto:|tel:|javascript:)/);
         }
 

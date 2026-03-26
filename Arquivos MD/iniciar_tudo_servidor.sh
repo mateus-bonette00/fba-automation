@@ -40,7 +40,6 @@ AUTOMATION_PRICE_MIN="${AUTOMATION_PRICE_MIN:-0}"
 AUTOMATION_PRICE_LIMIT="${AUTOMATION_PRICE_LIMIT:-85}"
 AUTOMATION_EXPORT_THRESHOLD="${AUTOMATION_EXPORT_THRESHOLD:-500}"
 AUTOMATION_START_INDEX="${AUTOMATION_START_INDEX:-36}"
-AUTOMATION_PERSON="${AUTOMATION_PERSON:-Mateus}"
 
 AUTOMATION_PROFILE_ARG="${1:-}"
 if [[ "$AUTOMATION_PROFILE_ARG" == --profile=* ]]; then
@@ -362,7 +361,7 @@ start_chrome_watchdog() {
 start_automation_job() {
   local start_url
   local response
-  start_url="http://127.0.0.1:8001/api/automation/start?devtools_url=${AUTOMATION_DEVTOOLS_URL}&batch_size=${AUTOMATION_BATCH_SIZE}&price_min=${AUTOMATION_PRICE_MIN}&price_limit=${AUTOMATION_PRICE_LIMIT}&export_threshold=${AUTOMATION_EXPORT_THRESHOLD}&start_index=${AUTOMATION_START_INDEX}&person=${AUTOMATION_PERSON}&resume=true"
+  start_url="http://127.0.0.1:8001/api/automation/start?devtools_url=${AUTOMATION_DEVTOOLS_URL}&batch_size=${AUTOMATION_BATCH_SIZE}&price_min=${AUTOMATION_PRICE_MIN}&price_limit=${AUTOMATION_PRICE_LIMIT}&export_threshold=${AUTOMATION_EXPORT_THRESHOLD}&start_index=${AUTOMATION_START_INDEX}&resume=true"
   response="$(curl -sS -X POST "$start_url" 2>/dev/null || true)"
 
   if echo "$response" | grep -q '"status":"started"'; then

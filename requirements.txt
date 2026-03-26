@@ -4,6 +4,7 @@
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
+python-multipart==0.0.6
 
 # Web Scraping
 playwright==1.40.0
@@ -13,6 +14,15 @@ lxml==4.9.3
 # HTTP Requests
 httpx==0.25.2
 requests==2.31.0
+
+# Data Processing
+pandas==2.1.3
+numpy>=1.24.0
+
+# Google Sheets API
+google-api-python-client==2.118.0
+google-auth-httplib2==0.2.0
+google-auth-oauthlib==1.2.0
 
 # Utilidades
 python-dotenv==1.0.0

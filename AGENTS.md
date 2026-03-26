@@ -1,12 +1,10 @@
-# AGENTS.md Global
+h77# AGENTS.md Global
 
 - POR FAVOR, SEMPRE, SEMPRE SUAS RESPOSTAS TEM QUE SER COMO UM GUIA DETALHADO, PASSO A PASSO, DO INICIO AO FIM DO PROCESSO, COM LINKS DIRETOS PARA ONDE O USUARIO DEVE CLICAR E O QUE DEVE FAZER, SEM OMITIR ETAPAS INTERMEDIARIAS. EU QUERO COISAS SIMPLES, E TERMOS SIMPLES TAMBÉM, EU SOU LEIGO NAS COISAS, NÃO ENCHE LINGUIÇAS E SEJA MAIS OBJETIVO!!
 
 EU QUERO COISAS SIMPLES, E TERMOS SIMPLES TAMBÉM, EU SOU LEIGO NAS COISAS, NÃO ENCHE LINGUIÇAS E SEJA MAIS OBJETIVO!!
 EU QUERO COISAS SIMPLES, E TERMOS SIMPLES TAMBÉM, EU SOU LEIGO NAS COISAS, NÃO ENCHE LINGUIÇAS E SEJA MAIS OBJETIVO!!
 EU QUERO COISAS SIMPLES, E TERMOS SIMPLES TAMBÉM, EU SOU LEIGO NAS COISAS, NÃO ENCHE LINGUIÇAS E SEJA MAIS OBJETIVO!!
-
-QUANDO VOCÊ FOR EXPLICAR ALGO, OU FALAR O QUE VOCÊ VAI FAZER, FALA COM UM PORTUGUÊS SIMPLES E FACIL DE ENTENDER E SEMPRE TRAZER UM EXEMPLO, PARA EU ENTENDER 100% MELHOR
 
 ## Prioridade de Instruções
 
@@ -16,6 +14,14 @@ QUANDO VOCÊ FOR EXPLICAR ALGO, OU FALAR O QUE VOCÊ VAI FAZER, FALA COM UM PORT
 4. Preferências implícitas na conversa.
 
 Se houver conflito entre regras, seguir sempre a de maior prioridade.
+
+
+## Regras do repositório
+
+- Não analisar node_modules, dist, build, coverage, logs, data, backups, migrations e database sem solicitação explícita.
+- Ignorar arquivos de mídia, lockfiles e arquivos exportados.
+- Focar em src, app, backend, frontend, api, services, components, lib e configs.
+- Antes de abrir muitos arquivos, priorizar estrutura e pontos de entrada do sistema.
 
 ## Idioma e Estilo
 
